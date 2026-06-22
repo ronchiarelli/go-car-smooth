@@ -24,7 +24,7 @@ function AdminSales() {
     },
   });
 
-  async function setStatus(id: string, status: "pending" | "accepted" | "rejected" | "completed") {
+  async function setStatus(id: string, status: "pending" | "contacted" | "closed" | "cancelled") {
     const { error } = await supabase.from("purchase_requests").update({ status }).eq("id", id);
     if (error) toast.error(error.message);
     else { toast.success("Updated"); qc.invalidateQueries({ queryKey: ["admin-sales"] }); }
@@ -44,7 +44,7 @@ function AdminSales() {
               {r.message && <p className="mt-1 line-clamp-2 text-xs text-foreground/70">{r.message}</p>}
             </div>
             <select value={r.status} onChange={(e) => setStatus(r.id, e.target.value as any)} className="rounded-md border border-border bg-background px-2 py-1 text-xs">
-              {["pending","accepted","rejected","completed"].map((s) => <option key={s}>{s}</option>)}
+              {["pending","contacted","closed","cancelled"].map((s) => <option key={s}>{s}</option>)}
             </select>
           </div>
         ))}

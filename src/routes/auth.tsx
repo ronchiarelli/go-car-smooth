@@ -24,7 +24,8 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup" | "phone">("signin");
+  const search = useSearch({ from: "/auth" });
+  const [mode, setMode] = useState<"signin" | "signup" | "phone">(search.mode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -33,6 +34,10 @@ function AuthPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [resetting, setResetting] = useState(false);
+
+  useEffect(() => {
+    setMode(search.mode);
+  }, [search.mode]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {

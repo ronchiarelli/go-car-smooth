@@ -92,7 +92,7 @@ function AdminHome() {
                   <p className="truncate text-sm font-bold">{b.vehicles?.name ?? "Vehicle"}</p>
                   <p className="text-xs text-foreground/60">{new Date(b.pickup_at).toLocaleDateString()} → {new Date(b.return_at).toLocaleDateString()}</p>
                 </div>
-                <p className="font-display text-lg text-primary">GH₵ ${Number(b.total_price).toFixed(0)}</p>
+                <p className="font-display text-lg text-primary">GH₵ {Number(b.total_price).toFixed(0)}</p>
               </div>
             ))}
           </div>

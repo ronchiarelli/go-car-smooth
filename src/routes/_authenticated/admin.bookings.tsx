@@ -39,7 +39,7 @@ function AdminBookings() {
               <p className="text-xs text-foreground/60">{new Date(b.pickup_at).toLocaleString()} → {new Date(b.return_at).toLocaleString()}</p>
               <p className="text-xs text-foreground/60">{b.pickup_location} → {b.dropoff_location}</p>
             </div>
-            <p className="font-display text-xl text-primary">GH₵ ${Number(b.total_price).toFixed(0)}</p>
+            <p className="font-display text-xl text-primary">GH₵ {Number(b.total_price).toFixed(0)}</p>
             <select value={b.status} onChange={(e) => setStatus(b.id, e.target.value as any)} className="rounded-md border border-border bg-background px-2 py-1 text-xs">
               {["pending","confirmed","cancelled","completed"].map((s) => <option key={s}>{s}</option>)}
             </select>

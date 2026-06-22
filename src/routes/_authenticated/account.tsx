@@ -111,8 +111,8 @@ function AccountPage() {
                 {r.vehicles?.primary_image_url && <img src={r.vehicles.primary_image_url} alt="" className="h-14 w-20 rounded-md object-cover" />}
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-bold">{r.vehicles?.name}</p>
-                  <p className="text-xs text-foreground/60">{r.vehicles?.brand} · Listed GH₵ ${Number(r.vehicles?.sale_price ?? 0).toLocaleString()}</p>
-                  {r.offer_price && <p className="text-xs text-foreground/60">Your offer: GH₵ ${Number(r.offer_price).toLocaleString()}</p>}
+                  <p className="text-xs text-foreground/60">{r.vehicles?.brand} · Listed GH₵ {Number(r.vehicles?.sale_price ?? 0).toLocaleString()}</p>
+                  {r.offer_price && <p className="text-xs text-foreground/60">Your offer: GH₵ {Number(r.offer_price).toLocaleString()}</p>}
                 </div>
                 <StatusPill status={r.status} />
               </div>
@@ -158,7 +158,7 @@ function BookingRow({ b }: { b: any }) {
         <p className="truncate text-xs text-foreground/60">{b.pickup_location} → {b.dropoff_location}</p>
       </div>
       <div className="text-right">
-        <p className="font-display text-xl text-primary">GH₵ ${Number(b.total_price).toFixed(0)}</p>
+        <p className="font-display text-xl text-primary">GH₵ {Number(b.total_price).toFixed(0)}</p>
         <StatusPill status={b.status} />
       </div>
     </div>

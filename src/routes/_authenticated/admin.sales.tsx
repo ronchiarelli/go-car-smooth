@@ -40,7 +40,7 @@ function AdminSales() {
             {r.vehicles?.primary_image_url && <img src={r.vehicles.primary_image_url} alt="" className="h-16 w-24 rounded-md object-cover" />}
             <div className="min-w-0 flex-1">
               <p className="truncate font-bold">{r.vehicles?.name}</p>
-              <p className="text-xs text-foreground/60">Listed GH₵ ${Number(r.vehicles?.sale_price ?? 0).toLocaleString()}{r.offer_price ? ` · Offer GH₵ ${Number(r.offer_price).toLocaleString()}` : ""}</p>
+              <p className="text-xs text-foreground/60">Listed GH₵ {Number(r.vehicles?.sale_price ?? 0).toLocaleString()}{r.offer_price ? ` · Offer GH₵ ${Number(r.offer_price).toLocaleString()}` : ""}</p>
               {r.message && <p className="mt-1 line-clamp-2 text-xs text-foreground/70">{r.message}</p>}
             </div>
             <select value={r.status} onChange={(e) => setStatus(r.id, e.target.value as any)} className="rounded-md border border-border bg-background px-2 py-1 text-xs">

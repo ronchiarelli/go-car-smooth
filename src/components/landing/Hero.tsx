@@ -43,7 +43,7 @@ export function Hero() {
                     key={t.id}
                     onClick={() => setTab(t.id)}
                     type="button"
-                    className={`relative flex min-w-20 shrink-0 flex-1 flex-col items-center gap-1 rounded-t-xl px-3 py-3 text-xs font-bold uppercase transition ${
+                    className={`relative flex min-w-20 shrink-0 flex-1 flex-col items-center gap-1 rounded-t-xl px-3 py-3 text-xs font-bold uppercase transition GH₵ {
                       active ? "bg-primary text-primary-foreground" : "text-foreground/70 hover:bg-muted"
                     }`}
                   >
@@ -57,7 +57,7 @@ export function Hero() {
               className="space-y-4 border-t border-border bg-background p-5"
               onSubmit={(e) => {
                 e.preventDefault();
-                window.location.assign(`/cars?type=${tab}`);
+                window.location.assign(`/cars?type=GH₵ {tab}`);
               }}
             >
               <div className="grid gap-3 sm:grid-cols-3">
@@ -99,7 +99,7 @@ export function Hero() {
           </div>
           <div className="absolute right-2 top-2 z-10 rounded-xl bg-black/80 px-3 py-2 text-right text-white shadow-xl sm:right-4 sm:top-32 sm:px-5 sm:py-3">
             <p className="text-[10px] uppercase tracking-widest text-white/60 sm:text-xs">Premium</p>
-            <p className="font-display text-xl text-primary sm:text-3xl">$800<span className="text-xs text-white sm:text-sm">/day</span></p>
+            <p className="font-display text-xl text-primary sm:text-3xl">GH₵ 800<span className="text-xs text-white sm:text-sm">/day</span></p>
           </div>
           <img
             src={heroCar}

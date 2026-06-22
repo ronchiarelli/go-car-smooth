@@ -56,12 +56,12 @@ function SalePage() {
                   <div className="grid h-full place-items-center text-foreground/40">No image</div>
                 )}
                 <div className="absolute bottom-0 right-0 bg-background px-4 py-2">
-                  <span className="font-display text-2xl text-primary">${Number(v.sale_price ?? 0).toLocaleString()}</span>
+                  <span className="font-display text-2xl text-primary">GH₵ {Number(v.sale_price ?? 0).toLocaleString()}</span>
                 </div>
               </div>
               <div className="space-y-1 p-5">
                 <h3 className="font-display text-xl">{v.name}</h3>
-                <p className="text-xs uppercase tracking-widest text-foreground/60">{v.brand} · {v.year ?? ""} · {v.mileage ? `${v.mileage.toLocaleString()} mi` : ""}</p>
+                <p className="text-xs uppercase tracking-widest text-foreground/60">{v.brand} · {v.year ?? ""} · {v.mileage ? `GH₵ {v.mileage.toLocaleString()} mi` : ""}</p>
               </div>
             </Link>
           ))}

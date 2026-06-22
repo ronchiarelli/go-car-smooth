@@ -9,9 +9,9 @@ import { HelpCTA } from "@/components/landing/HelpCTA";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "GoCar — Rent or Buy Premium Cars & Bikes" },
-      { name: "description", content: "Rent or buy premium cars, SUVs and bikes with free pickup, flexible pricing and 24/7 support." },
-      { property: "og:title", content: "GoCar — Rent or Buy Premium Cars & Bikes" },
+      { title: "GoCar — Rent or Buy Premium Cars" },
+      { name: "description", content: "Rent or buy premium cars and SUVs with free pickup, flexible pricing and 24/7 support." },
+      { property: "og:title", content: "GoCar — Rent or Buy Premium Cars" },
       { property: "og:description", content: "Premium fleet, flexible pricing, free pickup." },
     ],
   }),

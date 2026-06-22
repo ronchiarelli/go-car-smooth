@@ -7,7 +7,7 @@ export const Route = createFileRoute("/cars")({
   head: () => ({
     meta: [
       { title: "Rental Fleet — GoCar" },
-      { name: "description", content: "Browse the full GoCar rental fleet — cars, SUVs, vans, bikes and more." },
+      { name: "description", content: "Browse the full GoCar rental fleet — cars, SUVs, vans and more." },
       { property: "og:title", content: "Rental Fleet — GoCar" },
       { property: "og:description", content: "Browse our full rental fleet." },
     ],

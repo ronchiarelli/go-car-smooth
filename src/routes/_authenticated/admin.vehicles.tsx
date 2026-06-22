@@ -111,7 +111,7 @@ function AdminVehicles() {
         <div className="grid grid-cols-2 gap-3">
           <Field label="Type">
             <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="input">
-              {["car","van","minibus","coupe","bike","suv","truck"].map((t) => <option key={t}>{t}</option>)}
+              {["car","van","minibus","coupe","suv","truck"].map((t) => <option key={t}>{t}</option>)}
             </select>
           </Field>
           <Field label="Listing">

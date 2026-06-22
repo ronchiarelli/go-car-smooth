@@ -38,12 +38,31 @@ export function Header() {
         <div className="hidden items-center gap-4 xl:flex">
           <ContactBadge icon={<Phone className="h-4 w-4" />} label="+1 202 102 2525" />
           <ContactBadge icon={<Mail className="h-4 w-4" />} label="hello@gocar.app" />
-          <Link
-            to={isAuthenticated ? (isStaff ? "/admin" : "/account") : "/auth"}
-            className="rounded-md bg-foreground px-4 py-2 text-sm font-bold text-background transition hover:bg-primary"
-          >
-            {isAuthenticated ? (isStaff ? "Garage" : "Account") : "Sign in"}
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to={isStaff ? "/admin" : "/account"}
+              className="rounded-md bg-foreground px-4 py-2 text-sm font-bold text-background transition hover:bg-primary"
+            >
+              {isStaff ? "Garage" : "Account"}
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/auth"
+                search={{ mode: "signin" }}
+                className="text-sm font-semibold text-foreground/80 transition hover:text-primary"
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/auth"
+                search={{ mode: "signup" }}
+                className="rounded-md bg-foreground px-4 py-2 text-sm font-bold text-background transition hover:bg-primary"
+              >
+                Sign up
+              </Link>
+            </>
+          )}
         </div>
         <button
           aria-label="Toggle menu"

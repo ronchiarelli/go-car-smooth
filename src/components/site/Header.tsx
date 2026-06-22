@@ -86,13 +86,34 @@ export function Header() {
                 {n.label}
               </Link>
             ))}
-            <Link
-              to={isAuthenticated ? (isStaff ? "/admin" : "/account") : "/auth"}
-              className="mt-2 rounded-md bg-foreground px-3 py-2 text-center text-sm font-bold text-background"
-              onClick={() => setOpen(false)}
-            >
-              {isAuthenticated ? (isStaff ? "Garage" : "Account") : "Sign in"}
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                to={isStaff ? "/admin" : "/account"}
+                className="mt-2 rounded-md bg-foreground px-3 py-2 text-center text-sm font-bold text-background"
+                onClick={() => setOpen(false)}
+              >
+                {isStaff ? "Garage" : "Account"}
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/auth"
+                  search={{ mode: "signin" }}
+                  className="mt-2 rounded-md px-3 py-2 text-center text-sm font-semibold text-foreground/80 hover:bg-muted"
+                  onClick={() => setOpen(false)}
+                >
+                  Sign in
+                </Link>
+                <Link
+                  to="/auth"
+                  search={{ mode: "signup" }}
+                  className="rounded-md bg-foreground px-3 py-2 text-center text-sm font-bold text-background"
+                  onClick={() => setOpen(false)}
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       )}

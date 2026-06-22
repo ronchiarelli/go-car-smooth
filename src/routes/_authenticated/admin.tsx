@@ -6,8 +6,8 @@ export const Route = createFileRoute("/_authenticated/admin")({
     const { data: u } = await supabase.auth.getUser();
     if (!u.user) throw redirect({ to: "/auth" });
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", u.user.id);
-    const isAdmin = (roles ?? []).some((r) => r.role === "admin");
-    if (!isAdmin) throw redirect({ to: "/account" });
+    const isStaff = (roles ?? []).some((r) => r.role === "admin" || r.role === "fleet_manager");
+    if (!isStaff) throw redirect({ to: "/account" });
   },
   component: AdminLayout,
 });
@@ -16,7 +16,7 @@ function AdminLayout() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-3xl">Admin</h1>
+        <h1 className="font-display text-3xl">Garage</h1>
         <nav className="flex gap-2 text-sm font-semibold">
           <Link to="/admin" className="rounded-md px-3 py-1.5 hover:bg-muted" activeProps={{ className: "bg-foreground text-background" }} activeOptions={{ exact: true }}>Dashboard</Link>
           <Link to="/admin/vehicles" className="rounded-md px-3 py-1.5 hover:bg-muted" activeProps={{ className: "bg-foreground text-background" }}>Vehicles</Link>

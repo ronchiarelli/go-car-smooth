@@ -26,6 +26,7 @@ function AuthPage() {
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -57,6 +58,25 @@ function AuthPage() {
       toast.error((err as Error).message);
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function onForgotPassword() {
+    if (!email) {
+      toast.error("Enter your email above, then click forgot password.");
+      return;
+    }
+    setResetting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("Password reset link sent. Check your email.");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setResetting(false);
     }
   }
 
@@ -120,6 +140,16 @@ function AuthPage() {
             )}
             <Input label="Email" type="email" value={email} onChange={setEmail} required />
             <Input label="Password" type="password" value={password} onChange={setPassword} required />
+            {mode === "signin" && (
+              <button
+                type="button"
+                onClick={onForgotPassword}
+                disabled={resetting}
+                className="text-xs font-semibold text-primary hover:underline disabled:opacity-50"
+              >
+                {resetting ? "Sending…" : "Forgot password?"}
+              </button>
+            )}
             <button disabled={busy} className="w-full rounded-md bg-primary py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground disabled:opacity-50">
               {mode === "signup" ? "Create account" : "Sign in"}
             </button>

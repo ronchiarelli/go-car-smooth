@@ -19,7 +19,7 @@ type Form = {
 const EMPTY: Form = {
   name: "", brand: "", type: "car", listing: "rent",
   daily_price: "", sale_price: "", seats: "4", bags: "2",
-  fuel: "petrol", transmission: "automatic", year: "", mileage: "",
+  fuel: "petrol", transmission: "Automatic", year: "", mileage: "",
   description: "", primary_image_url: "",
 };
 
@@ -36,13 +36,48 @@ function AdminVehicles() {
 
   const [form, setForm] = useState<Form>(EMPTY);
   const [busy, setBusy] = useState(false);
+  const [gallery, setGallery] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
 
-  async function uploadImage(file: File) {
-    const path = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+  async function uploadOne(file: File): Promise<string | null> {
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}-${file.name.replace(/\s+/g, "-")}`;
     const { error } = await supabase.storage.from("vehicle-images").upload(path, file);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(error.message); return null; }
     const { data } = await supabase.storage.from("vehicle-images").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
-    if (data?.signedUrl) setForm((f) => ({ ...f, primary_image_url: data.signedUrl }));
+    return data?.signedUrl ?? null;
+  }
+
+  async function uploadImages(files: FileList) {
+    setUploading(true);
+    try {
+      const urls: string[] = [];
+      for (const file of Array.from(files)) {
+        const u = await uploadOne(file);
+        if (u) urls.push(u);
+      }
+      if (!urls.length) return;
+      setForm((f) => {
+        if (f.primary_image_url) {
+          setGallery((g) => [...g, ...urls]);
+          return f;
+        }
+        setGallery((g) => [...g, ...urls.slice(1)]);
+        return { ...f, primary_image_url: urls[0] };
+      });
+      toast.success(`Uploaded ${urls.length} image${urls.length === 1 ? "" : "s"}`);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function removeImage(url: string) {
+    if (form.primary_image_url === url) {
+      const next = gallery[0] ?? "";
+      setForm((f) => ({ ...f, primary_image_url: next }));
+      setGallery((g) => g.slice(1));
+    } else {
+      setGallery((g) => g.filter((u) => u !== url));
+    }
   }
 
   async function submit(e: React.FormEvent) {
@@ -61,10 +96,16 @@ function AdminVehicles() {
         description: form.description || null,
         primary_image_url: form.primary_image_url || null,
       };
-      const { error } = await supabase.from("vehicles").insert(payload);
+      const { data: inserted, error } = await supabase.from("vehicles").insert(payload).select("id").single();
       if (error) throw error;
+      if (gallery.length && inserted?.id) {
+        const rows = gallery.map((url, i) => ({ vehicle_id: inserted.id, url, sort: i + 1 }));
+        const { error: gErr } = await supabase.from("vehicle_images").insert(rows);
+        if (gErr) toast.error(`Vehicle saved but gallery failed: ${gErr.message}`);
+      }
       toast.success("Vehicle added");
       setForm(EMPTY);
+      setGallery([]);
       qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
       qc.invalidateQueries({ queryKey: ["vehicles"] });
     } catch (err) {
@@ -95,8 +136,8 @@ function AdminVehicles() {
                 <p className="text-xs text-foreground/60">{v.brand} · {v.type} · {v.listing}</p>
               </div>
               <div className="text-right text-xs">
-                {v.daily_price && <p>${Number(v.daily_price)}/day</p>}
-                {v.sale_price && <p>${Number(v.sale_price).toLocaleString()}</p>}
+                {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>${Number(v.daily_price).toLocaleString()}/day</p>}
+                {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>${Number(v.sale_price).toLocaleString()}</p>}
               </div>
               <button onClick={() => remove(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
             </div>
@@ -111,7 +152,7 @@ function AdminVehicles() {
         <div className="grid grid-cols-2 gap-3">
           <Field label="Type">
             <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="input">
-              {["car","van","minibus","coupe","suv","truck"].map((t) => <option key={t}>{t}</option>)}
+              {["car","van","minibus","coupe","suv","truck","bike"].map((t) => <option key={t}>{t}</option>)}
             </select>
           </Field>
           <Field label="Listing">
@@ -133,9 +174,33 @@ function AdminVehicles() {
           <Field label="Mileage"><input value={form.mileage} onChange={(e) => setForm({ ...form, mileage: e.target.value })} className="input" /></Field>
         </div>
         <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input min-h-20" /></Field>
-        <Field label="Primary image">
-          <input type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && uploadImage(e.target.files[0])} className="text-xs" />
-          {form.primary_image_url && <img src={form.primary_image_url} alt="" className="mt-2 h-24 w-full rounded-md object-cover" />}
+        <Field label="Images (first is primary)">
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => { if (e.target.files?.length) { uploadImages(e.target.files); e.target.value = ""; } }}
+            className="text-xs"
+          />
+          {uploading && <p className="mt-1 text-xs text-foreground/60">Uploading…</p>}
+          {(form.primary_image_url || gallery.length > 0) && (
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {[form.primary_image_url, ...gallery].filter(Boolean).map((url, i) => (
+                <div key={url} className="relative">
+                  <img src={url} alt="" className="h-20 w-full rounded-md object-cover" />
+                  {i === 0 && <span className="absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">PRIMARY</span>}
+                  <button
+                    type="button"
+                    onClick={() => removeImage(url)}
+                    className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-destructive text-destructive-foreground"
+                    aria-label="Remove image"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </Field>
         <button disabled={busy} className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground disabled:opacity-50">
           <Plus className="h-4 w-4" /> Add vehicle

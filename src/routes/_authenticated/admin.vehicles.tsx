@@ -19,7 +19,7 @@ type Form = {
 const EMPTY: Form = {
   name: "", brand: "", type: "car", listing: "rent",
   daily_price: "", sale_price: "", seats: "4", bags: "2",
-  fuel: "petrol", transmission: "automatic", year: "", mileage: "",
+  fuel: "petrol", transmission: "Automatic", year: "", mileage: "",
   description: "", primary_image_url: "",
 };
 
@@ -36,13 +36,48 @@ function AdminVehicles() {
 
   const [form, setForm] = useState<Form>(EMPTY);
   const [busy, setBusy] = useState(false);
+  const [gallery, setGallery] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
 
-  async function uploadImage(file: File) {
-    const path = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+  async function uploadOne(file: File): Promise<string | null> {
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}-${file.name.replace(/\s+/g, "-")}`;
     const { error } = await supabase.storage.from("vehicle-images").upload(path, file);
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast.error(error.message); return null; }
     const { data } = await supabase.storage.from("vehicle-images").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
-    if (data?.signedUrl) setForm((f) => ({ ...f, primary_image_url: data.signedUrl }));
+    return data?.signedUrl ?? null;
+  }
+
+  async function uploadImages(files: FileList) {
+    setUploading(true);
+    try {
+      const urls: string[] = [];
+      for (const file of Array.from(files)) {
+        const u = await uploadOne(file);
+        if (u) urls.push(u);
+      }
+      if (!urls.length) return;
+      setForm((f) => {
+        if (f.primary_image_url) {
+          setGallery((g) => [...g, ...urls]);
+          return f;
+        }
+        setGallery((g) => [...g, ...urls.slice(1)]);
+        return { ...f, primary_image_url: urls[0] };
+      });
+      toast.success(`Uploaded ${urls.length} image${urls.length === 1 ? "" : "s"}`);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function removeImage(url: string) {
+    if (form.primary_image_url === url) {
+      const next = gallery[0] ?? "";
+      setForm((f) => ({ ...f, primary_image_url: next }));
+      setGallery((g) => g.slice(1));
+    } else {
+      setGallery((g) => g.filter((u) => u !== url));
+    }
   }
 
   async function submit(e: React.FormEvent) {
@@ -61,10 +96,16 @@ function AdminVehicles() {
         description: form.description || null,
         primary_image_url: form.primary_image_url || null,
       };
-      const { error } = await supabase.from("vehicles").insert(payload);
+      const { data: inserted, error } = await supabase.from("vehicles").insert(payload).select("id").single();
       if (error) throw error;
+      if (gallery.length && inserted?.id) {
+        const rows = gallery.map((url, i) => ({ vehicle_id: inserted.id, url, sort: i + 1 }));
+        const { error: gErr } = await supabase.from("vehicle_images").insert(rows);
+        if (gErr) toast.error(`Vehicle saved but gallery failed: ${gErr.message}`);
+      }
       toast.success("Vehicle added");
       setForm(EMPTY);
+      setGallery([]);
       qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
       qc.invalidateQueries({ queryKey: ["vehicles"] });
     } catch (err) {

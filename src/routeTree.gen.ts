@@ -22,6 +22,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminVehiclesRouteImport } from './routes/_authenticated/admin.vehicles'
+import { Route as AuthenticatedAdminSalesRouteImport } from './routes/_authenticated/admin.sales'
 import { Route as AuthenticatedAdminBookingsRouteImport } from './routes/_authenticated/admin.bookings'
 
 const ServicesRoute = ServicesRouteImport.update({
@@ -89,6 +90,11 @@ const AuthenticatedAdminVehiclesRoute =
     path: '/vehicles',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminSalesRoute = AuthenticatedAdminSalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminBookingsRoute =
   AuthenticatedAdminBookingsRouteImport.update({
     id: '/bookings',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/cars/$id': typeof CarsIdRoute
   '/admin/bookings': typeof AuthenticatedAdminBookingsRoute
+  '/admin/sales': typeof AuthenticatedAdminSalesRoute
   '/admin/vehicles': typeof AuthenticatedAdminVehiclesRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/cars/$id': typeof CarsIdRoute
   '/admin/bookings': typeof AuthenticatedAdminBookingsRoute
+  '/admin/sales': typeof AuthenticatedAdminSalesRoute
   '/admin/vehicles': typeof AuthenticatedAdminVehiclesRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/cars/$id': typeof CarsIdRoute
   '/_authenticated/admin/bookings': typeof AuthenticatedAdminBookingsRoute
+  '/_authenticated/admin/sales': typeof AuthenticatedAdminSalesRoute
   '/_authenticated/admin/vehicles': typeof AuthenticatedAdminVehiclesRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cars/$id'
     | '/admin/bookings'
+    | '/admin/sales'
     | '/admin/vehicles'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/cars/$id'
     | '/admin/bookings'
+    | '/admin/sales'
     | '/admin/vehicles'
     | '/admin'
   id:
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/cars/$id'
     | '/_authenticated/admin/bookings'
+    | '/_authenticated/admin/sales'
     | '/_authenticated/admin/vehicles'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -294,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminVehiclesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/sales': {
+      id: '/_authenticated/admin/sales'
+      path: '/sales'
+      fullPath: '/admin/sales'
+      preLoaderRoute: typeof AuthenticatedAdminSalesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/bookings': {
       id: '/_authenticated/admin/bookings'
       path: '/bookings'
@@ -306,12 +325,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBookingsRoute: typeof AuthenticatedAdminBookingsRoute
+  AuthenticatedAdminSalesRoute: typeof AuthenticatedAdminSalesRoute
   AuthenticatedAdminVehiclesRoute: typeof AuthenticatedAdminVehiclesRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBookingsRoute: AuthenticatedAdminBookingsRoute,
+  AuthenticatedAdminSalesRoute: AuthenticatedAdminSalesRoute,
   AuthenticatedAdminVehiclesRoute: AuthenticatedAdminVehiclesRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }

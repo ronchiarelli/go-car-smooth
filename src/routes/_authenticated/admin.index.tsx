@@ -47,11 +47,11 @@ function AdminHome() {
     <div className="space-y-8">
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        <Stat icon={<CarFront className="h-5 w-5" />} label="Vehicles" value={data.vehiclesTotal} sub={`GH₵ {data.vehiclesActive} active`} to="/admin/vehicles" />
-        <Stat icon={<Clock className="h-5 w-5" />} label="Active rentals" value={active.length} sub={`GH₵ {returnsToday.length} returns today`} to="/admin/bookings" tone="primary" />
+        <Stat icon={<CarFront className="h-5 w-5" />} label="Vehicles" value={data.vehiclesTotal} sub={`${data.vehiclesActive} active`} to="/admin/vehicles" />
+        <Stat icon={<Clock className="h-5 w-5" />} label="Active rentals" value={active.length} sub={`${returnsToday.length} returns today`} to="/admin/bookings" tone="primary" />
         <Stat icon={<AlertCircle className="h-5 w-5" />} label="Pending approvals" value={pending.length} sub="awaiting review" to="/admin/bookings" tone={pending.length ? "warn" : undefined} />
         {isAdmin ? (
-          <Stat icon={<DollarSign className="h-5 w-5" />} label="Revenue" value={`$GH₵ {revenue.toFixed(0)}`} sub="confirmed + completed" />
+          <Stat icon={<DollarSign className="h-5 w-5" />} label="Revenue" value={`$${revenue.toFixed(0)}`} sub="confirmed + completed" />
         ) : (
           <Stat icon={<CalendarCheck className="h-5 w-5" />} label="Total bookings" value={bookings.length} sub="all time" to="/admin/bookings" />
         )}
@@ -81,7 +81,7 @@ function AdminHome() {
       )}
 
       {/* Pending approvals */}
-      <Panel title={`Pending approvals (GH₵ {pending.length})`} action={<Link to="/admin/bookings" className="text-xs font-bold uppercase tracking-widest text-primary">Manage →</Link>}>
+      <Panel title={`Pending approvals (${pending.length})`} action={<Link to="/admin/bookings" className="text-xs font-bold uppercase tracking-widest text-primary">Manage →</Link>}>
         {!pending.length ? (
           <p className="text-sm text-foreground/60">Nothing waiting. You're all caught up.</p>
         ) : (
@@ -92,7 +92,7 @@ function AdminHome() {
                   <p className="truncate text-sm font-bold">{b.vehicles?.name ?? "Vehicle"}</p>
                   <p className="text-xs text-foreground/60">{new Date(b.pickup_at).toLocaleDateString()} → {new Date(b.return_at).toLocaleDateString()}</p>
                 </div>
-                <p className="font-display text-lg text-primary">GH₵ {Number(b.total_price).toFixed(0)}</p>
+                <p className="font-display text-lg text-primary">${Number(b.total_price).toFixed(0)}</p>
               </div>
             ))}
           </div>
@@ -111,7 +111,7 @@ function AdminHome() {
                   <p className="truncate text-sm font-bold">{b.vehicles?.name}</p>
                   <p className="text-xs text-foreground/60">{b.pickup_location} → {b.dropoff_location}</p>
                 </div>
-                <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase GH₵ {
+                <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
                   b.status === "confirmed" || b.status === "completed" ? "bg-primary/15 text-primary" :
                   b.status === "cancelled" ? "bg-destructive/15 text-destructive" :
                   "bg-muted text-foreground/70"
@@ -138,20 +138,20 @@ function Stat({ icon, label, value, sub, to, tone }: { icon: React.ReactNode; la
   const inner = (
     <>
       <div className="flex items-center gap-2">
-        <span className={`grid h-8 w-8 place-items-center rounded-lg GH₵ {iconWrap}`}>{icon}</span>
+        <span className={`grid h-8 w-8 place-items-center rounded-lg ${iconWrap}`}>{icon}</span>
         <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">{label}</p>
       </div>
-      <p className={`mt-3 font-display text-3xl sm:text-4xl GH₵ {tone === "primary" ? "" : "text-primary"}`}>{value}</p>
+      <p className={`mt-3 font-display text-3xl sm:text-4xl ${tone === "primary" ? "" : "text-primary"}`}>{value}</p>
       {sub && <p className="mt-1 text-xs opacity-70">{sub}</p>}
     </>
   );
-  if (to) return <Link to={to} className={`GH₵ {base} GH₵ {bg}`}>{inner}</Link>;
-  return <div className={`GH₵ {base} GH₵ {bg}`}>{inner}</div>;
+  if (to) return <Link to={to} className={`${base} ${bg}`}>{inner}</Link>;
+  return <div className={`${base} ${bg}`}>{inner}</div>;
 }
 
 function Panel({ title, children, action, tone }: { title: string; children: React.ReactNode; action?: React.ReactNode; tone?: "primary" }) {
   return (
-    <div className={`rounded-3xl p-5 sm:p-6 GH₵ {tone === "primary" ? "bg-primary text-primary-foreground" : "border border-border bg-card"}`}>
+    <div className={`rounded-3xl p-5 sm:p-6 ${tone === "primary" ? "bg-primary text-primary-foreground" : "border border-border bg-card"}`}>
       <div className="mb-3 flex items-center justify-between gap-2">
         <h3 className="font-display text-xl">{title}</h3>
         {action}

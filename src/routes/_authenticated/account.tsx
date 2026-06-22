@@ -70,7 +70,7 @@ function AccountPage() {
       <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Stat icon={<CalendarCheck className="h-5 w-5" />} label="Total bookings" value={bookings?.length ?? 0} />
         <Stat icon={<CarFront className="h-5 w-5" />} label="Upcoming" value={upcoming.length} />
-        <Stat icon={<Wallet className="h-5 w-5" />} label="Total spent" value={`$GH₵ {totalSpent.toFixed(0)}`} />
+        <Stat icon={<Wallet className="h-5 w-5" />} label="Total spent" value={`$${totalSpent.toFixed(0)}`} />
         <Stat icon={<ShoppingBag className="h-5 w-5" />} label="Buy requests" value={requests?.length ?? 0} />
       </div>
 
@@ -111,8 +111,8 @@ function AccountPage() {
                 {r.vehicles?.primary_image_url && <img src={r.vehicles.primary_image_url} alt="" className="h-14 w-20 rounded-md object-cover" />}
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-bold">{r.vehicles?.name}</p>
-                  <p className="text-xs text-foreground/60">{r.vehicles?.brand} · Listed GH₵ {Number(r.vehicles?.sale_price ?? 0).toLocaleString()}</p>
-                  {r.offer_price && <p className="text-xs text-foreground/60">Your offer: GH₵ {Number(r.offer_price).toLocaleString()}</p>}
+                  <p className="text-xs text-foreground/60">{r.vehicles?.brand} · Listed ${Number(r.vehicles?.sale_price ?? 0).toLocaleString()}</p>
+                  {r.offer_price && <p className="text-xs text-foreground/60">Your offer: ${Number(r.offer_price).toLocaleString()}</p>}
                 </div>
                 <StatusPill status={r.status} />
               </div>
@@ -158,7 +158,7 @@ function BookingRow({ b }: { b: any }) {
         <p className="truncate text-xs text-foreground/60">{b.pickup_location} → {b.dropoff_location}</p>
       </div>
       <div className="text-right">
-        <p className="font-display text-xl text-primary">GH₵ {Number(b.total_price).toFixed(0)}</p>
+        <p className="font-display text-xl text-primary">${Number(b.total_price).toFixed(0)}</p>
         <StatusPill status={b.status} />
       </div>
     </div>
@@ -170,5 +170,5 @@ function StatusPill({ status }: { status: string }) {
     status === "confirmed" || status === "completed" ? "bg-primary/15 text-primary" :
     status === "cancelled" || status === "rejected" ? "bg-destructive/15 text-destructive" :
     "bg-muted text-foreground/70";
-  return <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase GH₵ {tone}`}>{status}</span>;
+  return <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${tone}`}>{status}</span>;
 }

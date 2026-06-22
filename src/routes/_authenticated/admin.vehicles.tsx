@@ -40,7 +40,7 @@ function AdminVehicles() {
   const [uploading, setUploading] = useState(false);
 
   async function uploadOne(file: File): Promise<string | null> {
-    const path = `GH₵ {Date.now()}-GH₵ {Math.random().toString(36).slice(2, 7)}-GH₵ {file.name.replace(/\s+/g, "-")}`;
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}-${file.name.replace(/\s+/g, "-")}`;
     const { error } = await supabase.storage.from("vehicle-images").upload(path, file);
     if (error) { toast.error(error.message); return null; }
     const { data } = await supabase.storage.from("vehicle-images").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
@@ -64,7 +64,7 @@ function AdminVehicles() {
         setGallery((g) => [...g, ...urls.slice(1)]);
         return { ...f, primary_image_url: urls[0] };
       });
-      toast.success(`Uploaded GH₵ {urls.length} image${urls.length === 1 ? "" : "s"}`);
+      toast.success(`Uploaded ${urls.length} image${urls.length === 1 ? "" : "s"}`);
     } finally {
       setUploading(false);
     }
@@ -101,7 +101,7 @@ function AdminVehicles() {
       if (gallery.length && inserted?.id) {
         const rows = gallery.map((url, i) => ({ vehicle_id: inserted.id, url, sort: i + 1 }));
         const { error: gErr } = await supabase.from("vehicle_images").insert(rows);
-        if (gErr) toast.error(`Vehicle saved but gallery failed: GH₵ {gErr.message}`);
+        if (gErr) toast.error(`Vehicle saved but gallery failed: ${gErr.message}`);
       }
       toast.success("Vehicle added");
       setForm(EMPTY);
@@ -136,8 +136,8 @@ function AdminVehicles() {
                 <p className="text-xs text-foreground/60">{v.brand} · {v.type} · {v.listing}</p>
               </div>
               <div className="text-right text-xs">
-                {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>GH₵ {Number(v.daily_price).toLocaleString()}/day</p>}
-                {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>GH₵ {Number(v.sale_price).toLocaleString()}</p>}
+                {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>${Number(v.daily_price).toLocaleString()}/day</p>}
+                {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>${Number(v.sale_price).toLocaleString()}</p>}
               </div>
               <button onClick={() => remove(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
             </div>

@@ -43,7 +43,7 @@ export function Hero() {
                     key={t.id}
                     onClick={() => setTab(t.id)}
                     type="button"
-                    className={`relative flex min-w-20 shrink-0 flex-1 flex-col items-center gap-1 rounded-t-xl px-3 py-3 text-xs font-bold uppercase transition GH₵ {
+                    className={`relative flex min-w-20 shrink-0 flex-1 flex-col items-center gap-1 rounded-t-xl px-3 py-3 text-xs font-bold uppercase transition ${
                       active ? "bg-primary text-primary-foreground" : "text-foreground/70 hover:bg-muted"
                     }`}
                   >
@@ -57,7 +57,7 @@ export function Hero() {
               className="space-y-4 border-t border-border bg-background p-5"
               onSubmit={(e) => {
                 e.preventDefault();
-                window.location.assign(`/cars?type=GH₵ {tab}`);
+                window.location.assign(`/cars?type=${tab}`);
               }}
             >
               <div className="grid gap-3 sm:grid-cols-3">

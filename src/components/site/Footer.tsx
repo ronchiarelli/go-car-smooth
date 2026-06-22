@@ -9,7 +9,7 @@ export function Footer() {
         <div className="space-y-4">
           <Logo light />
           <p className="text-sm text-white/70">
-            GoCar gives you premium cars and bikes to rent or buy, with zero hassle and
+            GoCar gives you premium cars to rent or buy, with zero hassle and
             transparent prices.
           </p>
           <div className="flex gap-3">

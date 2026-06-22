@@ -86,14 +86,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "GoCar — Rent or Buy Premium Cars & Bikes" },
-      { name: "description", content: "GoCar lets you rent or buy premium cars, SUVs and bikes with free pickup and transparent pricing." },
+      { title: "GoCar — Rent or Buy Premium Cars" },
+      { name: "description", content: "GoCar lets you rent or buy premium cars and SUVs with free pickup and transparent pricing." },
       { name: "author", content: "GoCar" },
-      { property: "og:title", content: "GoCar — Rent or Buy Premium Cars & Bikes" },
+      { property: "og:title", content: "GoCar — Rent or Buy Premium Cars" },
       { property: "og:description", content: "Premium fleet, flexible pricing, free pickup. Rent or buy with GoCar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "GoCar — Rent or Buy Premium Cars & Bikes" },
+      { name: "twitter:title", content: "GoCar — Rent or Buy Premium Cars" },
       { name: "twitter:description", content: "Premium fleet, flexible pricing, free pickup." },
     ],
     links: [

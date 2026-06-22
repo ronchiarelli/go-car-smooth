@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Car, Bus, Truck as TruckIcon, Bike } from "lucide-react";
+import { Car, Bus, Truck as TruckIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import heroCar from "@/assets/hero-car.jpg";
 
@@ -8,7 +8,6 @@ const TABS = [
   { id: "van", label: "Van", icon: Bus },
   { id: "minibus", label: "Minibus", icon: Bus },
   { id: "coupe", label: "Coupe", icon: Car },
-  { id: "bike", label: "Bike", icon: Bike },
   { id: "truck", label: "Truck", icon: TruckIcon },
 ] as const;
 
@@ -22,12 +21,12 @@ export function Hero() {
             <span className="h-px w-8 bg-primary" /> Premium
           </div>
           <h1 className="font-display text-6xl leading-[0.95] tracking-wide sm:text-7xl md:text-8xl">
-            <span className="text-white">Cars</span>{" "}
-            <span className="text-white/40">&</span>{" "}
-            <span className="text-primary">Bikes</span>
+            <span className="text-white">Rent</span>{" "}
+            <span className="text-white/40">or</span>{" "}
+            <span className="text-primary">Buy</span>
           </h1>
           <p className="max-w-md text-white/70">
-            Rent or buy from a hand-picked fleet. Pick up at the door, drop off
+            Premium cars from a hand-picked fleet. Pick up at the door, drop off
             anywhere, drive away with confidence.
           </p>
 

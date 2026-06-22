@@ -265,7 +265,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "customer"
+      app_role: "admin" | "customer" | "fleet_manager"
       booking_status: "pending" | "confirmed" | "cancelled" | "completed"
       fuel_type: "petrol" | "diesel" | "electric" | "hybrid"
       purchase_status: "pending" | "contacted" | "closed" | "cancelled"
@@ -405,7 +405,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "customer"],
+      app_role: ["admin", "customer", "fleet_manager"],
       booking_status: ["pending", "confirmed", "cancelled", "completed"],
       fuel_type: ["petrol", "diesel", "electric", "hybrid"],
       purchase_status: ["pending", "contacted", "closed", "cancelled"],

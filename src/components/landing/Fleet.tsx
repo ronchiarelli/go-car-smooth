@@ -24,7 +24,7 @@ export function Fleet() {
               <div className="relative">
                 <img src={c.img} alt={c.name} loading="lazy" className="h-64 w-full object-cover" />
                 <div className="absolute bottom-0 right-0 bg-background px-5 py-3 text-right">
-                  <p className="font-display text-3xl text-primary">${c.price}</p>
+                  <p className="font-display text-3xl text-primary">GH₵ {c.price}</p>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/60">/ Day</p>
                   <Link
                     to="/cars"

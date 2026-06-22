@@ -51,7 +51,7 @@ function AdminHome() {
         <Stat icon={<Clock className="h-5 w-5" />} label="Active rentals" value={active.length} sub={`${returnsToday.length} returns today`} to="/admin/bookings" tone="primary" />
         <Stat icon={<AlertCircle className="h-5 w-5" />} label="Pending approvals" value={pending.length} sub="awaiting review" to="/admin/bookings" tone={pending.length ? "warn" : undefined} />
         {isAdmin ? (
-          <Stat icon={<DollarSign className="h-5 w-5" />} label="Revenue" value={`$${revenue.toFixed(0)}`} sub="confirmed + completed" />
+          <Stat icon={<DollarSign className="h-5 w-5" />} label="Revenue" value={`GH₵ ${revenue.toFixed(0)}`} sub="confirmed + completed" />
         ) : (
           <Stat icon={<CalendarCheck className="h-5 w-5" />} label="Total bookings" value={bookings.length} sub="all time" to="/admin/bookings" />
         )}
@@ -92,7 +92,7 @@ function AdminHome() {
                   <p className="truncate text-sm font-bold">{b.vehicles?.name ?? "Vehicle"}</p>
                   <p className="text-xs text-foreground/60">{new Date(b.pickup_at).toLocaleDateString()} → {new Date(b.return_at).toLocaleDateString()}</p>
                 </div>
-                <p className="font-display text-lg text-primary">${Number(b.total_price).toFixed(0)}</p>
+                <p className="font-display text-lg text-primary">GH₵ {Number(b.total_price).toFixed(0)}</p>
               </div>
             ))}
           </div>

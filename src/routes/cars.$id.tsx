@@ -108,10 +108,10 @@ function CarDetail() {
         <p className="text-sm uppercase tracking-widest text-foreground/60">{vehicle.brand} · {vehicle.type} · {vehicle.fuel}</p>
         <p className="mt-4 text-sm text-foreground/70 sm:text-base">{vehicle.description ?? "Premium vehicle, fully serviced and ready for your trip."}</p>
         {vehicle.daily_price != null && (
-          <p className="mt-6 font-display text-3xl text-primary">${Number(vehicle.daily_price).toLocaleString()}<span className="ml-1 text-sm text-foreground/60">/day</span></p>
+          <p className="mt-6 font-display text-3xl text-primary">GH₵ {Number(vehicle.daily_price).toLocaleString()}<span className="ml-1 text-sm text-foreground/60">/day</span></p>
         )}
         {vehicle.sale_price != null && (
-          <p className="mt-2 font-display text-2xl text-foreground">${Number(vehicle.sale_price).toLocaleString()}<span className="ml-1 text-sm text-foreground/60">sale price</span></p>
+          <p className="mt-2 font-display text-2xl text-foreground">GH₵ {Number(vehicle.sale_price).toLocaleString()}<span className="ml-1 text-sm text-foreground/60">sale price</span></p>
         )}
       </div>
       <form onSubmit={submit} className="space-y-4 rounded-3xl border border-border bg-card p-5 sm:p-6">

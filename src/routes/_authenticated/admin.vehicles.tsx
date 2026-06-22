@@ -136,8 +136,8 @@ function AdminVehicles() {
                 <p className="text-xs text-foreground/60">{v.brand} · {v.type} · {v.listing}</p>
               </div>
               <div className="text-right text-xs">
-                {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>${Number(v.daily_price).toLocaleString()}/day</p>}
-                {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>${Number(v.sale_price).toLocaleString()}</p>}
+                {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>GH₵ {Number(v.daily_price).toLocaleString()}/day</p>}
+                {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>GH₵ {Number(v.sale_price).toLocaleString()}</p>}
               </div>
               <button onClick={() => remove(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
             </div>
@@ -160,8 +160,8 @@ function AdminVehicles() {
               {["rent","sale","both"].map((t) => <option key={t}>{t}</option>)}
             </select>
           </Field>
-          <Field label="Daily $"><input value={form.daily_price} onChange={(e) => setForm({ ...form, daily_price: e.target.value })} className="input" /></Field>
-          <Field label="Sale $"><input value={form.sale_price} onChange={(e) => setForm({ ...form, sale_price: e.target.value })} className="input" /></Field>
+          <Field label="Daily (GH₵)"><input value={form.daily_price} onChange={(e) => setForm({ ...form, daily_price: e.target.value })} className="input" /></Field>
+          <Field label="Sale (GH₵)"><input value={form.sale_price} onChange={(e) => setForm({ ...form, sale_price: e.target.value })} className="input" /></Field>
           <Field label="Seats"><input value={form.seats} onChange={(e) => setForm({ ...form, seats: e.target.value })} className="input" /></Field>
           <Field label="Bags"><input value={form.bags} onChange={(e) => setForm({ ...form, bags: e.target.value })} className="input" /></Field>
           <Field label="Fuel">

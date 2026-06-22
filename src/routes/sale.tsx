@@ -32,11 +32,11 @@ function SalePage() {
   });
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 md:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-12">
       <div className="text-center">
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">— For Sale —</p>
-        <h1 className="mt-2 font-display text-5xl">Cars for Sale</h1>
-        <p className="mx-auto mt-3 max-w-xl text-foreground/70">Inspected, certified, and priced to move. Find your next ride.</p>
+        <h1 className="mt-2 font-display text-4xl sm:text-5xl">Cars for Sale</h1>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-foreground/70 sm:text-base">Inspected, certified, and priced to move. Find your next ride.</p>
       </div>
 
       {isLoading ? (
@@ -46,7 +46,7 @@ function SalePage() {
           No vehicles for sale yet. Check back soon — or browse our <Link to="/cars" className="text-primary">rental fleet</Link>.
         </p>
       ) : (
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((v) => (
             <Link key={v.id} to="/cars/$id" params={{ id: v.id }} className="overflow-hidden rounded-3xl bg-muted transition hover:-translate-y-1 hover:shadow-xl">
               <div className="relative h-56 bg-background">

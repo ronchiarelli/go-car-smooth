@@ -20,12 +20,12 @@ export const Route = createFileRoute("/services")({
     ],
   }),
   component: () => (
-    <section className="mx-auto max-w-7xl px-4 py-16 md:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-10 md:px-8 md:py-16">
       <div className="text-center">
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">— Services —</p>
-        <h1 className="mt-2 font-display text-5xl">Everything mobility, sorted.</h1>
+        <h1 className="mt-2 font-display text-4xl sm:text-5xl">Everything mobility, sorted.</h1>
       </div>
-      <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
         {SERVICES.map((s) => {
           const Icon = s.icon;
           return (

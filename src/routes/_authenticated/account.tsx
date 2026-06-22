@@ -32,13 +32,13 @@ function AccountPage() {
   }
 
   return (
-    <section className="mx-auto max-w-5xl px-4 py-12 md:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
+    <section className="mx-auto max-w-5xl px-4 py-8 md:px-8 md:py-12">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:flex-wrap sm:justify-between">
+        <div className="min-w-0">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">— Account —</p>
-          <h1 className="mt-2 font-display text-4xl">Hi {user?.email}</h1>
+          <h1 className="mt-2 truncate font-display text-2xl sm:text-4xl">Hi {user?.email}</h1>
         </div>
-        <div className="flex gap-2">
+        <div className="flex shrink-0 gap-2">
           {isStaff && <Link to="/admin" className="rounded-md bg-foreground px-4 py-2 text-sm font-bold text-background">Garage</Link>}
           <button onClick={signOut} className="rounded-md border border-border px-4 py-2 text-sm font-semibold">Sign out</button>
         </div>

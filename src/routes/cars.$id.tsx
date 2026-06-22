@@ -71,19 +71,19 @@ function CarDetail() {
   if (!vehicle) return <div className="p-10 text-center">Vehicle not found. <Link to="/cars" className="text-primary">Back to fleet</Link></div>;
 
   return (
-    <section className="mx-auto grid max-w-6xl gap-10 px-4 py-12 md:px-8 lg:grid-cols-2">
+    <section className="mx-auto grid max-w-6xl gap-8 px-4 py-8 md:px-8 md:py-12 lg:grid-cols-2">
       <div>
         {vehicle.primary_image_url ? (
-          <img src={vehicle.primary_image_url} alt={vehicle.name} className="w-full rounded-3xl object-cover" />
+          <img src={vehicle.primary_image_url} alt={vehicle.name} className="aspect-video w-full rounded-3xl object-cover" />
         ) : (
           <div className="aspect-video w-full rounded-3xl bg-muted" />
         )}
-        <h1 className="mt-6 font-display text-4xl">{vehicle.name}</h1>
+        <h1 className="mt-6 font-display text-3xl sm:text-4xl">{vehicle.name}</h1>
         <p className="text-sm uppercase tracking-widest text-foreground/60">{vehicle.brand} · {vehicle.type} · {vehicle.fuel}</p>
-        <p className="mt-4 text-foreground/70">{vehicle.description ?? "Premium vehicle, fully serviced and ready for your trip."}</p>
+        <p className="mt-4 text-sm text-foreground/70 sm:text-base">{vehicle.description ?? "Premium vehicle, fully serviced and ready for your trip."}</p>
         <p className="mt-6 font-display text-3xl text-primary">${Number(vehicle.daily_price ?? 0)}<span className="ml-1 text-sm text-foreground/60">/day</span></p>
       </div>
-      <form onSubmit={submit} className="space-y-4 rounded-3xl border border-border bg-card p-6">
+      <form onSubmit={submit} className="space-y-4 rounded-3xl border border-border bg-card p-5 sm:p-6">
         <h2 className="font-display text-2xl">Book this vehicle</h2>
         <Field label="Pick up location"><input required value={pickup} onChange={(e) => setPickup(e.target.value)} className="input" /></Field>
         <Field label="Drop off location"><input required value={dropoff} onChange={(e) => setDropoff(e.target.value)} className="input" /></Field>

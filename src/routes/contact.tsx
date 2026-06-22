@@ -11,12 +11,12 @@ export const Route = createFileRoute("/contact")({
     ],
   }),
   component: () => (
-    <section className="mx-auto max-w-5xl px-4 py-16 md:px-8">
+    <section className="mx-auto max-w-5xl px-4 py-10 md:px-8 md:py-16">
       <div className="text-center">
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">— Contact —</p>
-        <h1 className="mt-2 font-display text-5xl">We're a call away.</h1>
+        <h1 className="mt-2 font-display text-4xl sm:text-5xl">We're a call away.</h1>
       </div>
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-3 sm:gap-5">
         <Card icon={<Phone className="h-5 w-5" />} title="Phone" body="+1 202 102 2525" />
         <Card icon={<Mail className="h-5 w-5" />} title="Email" body="hello@gocar.app" />
         <Card icon={<MapPin className="h-5 w-5" />} title="Address" body="123 Drive Lane, Lagos" />

@@ -139,9 +139,9 @@ function AuthPage() {
         <p className="mt-1 text-sm text-foreground/70">Rent or buy your next ride with GoCar.</p>
 
         <div className="mt-6 flex gap-2 text-xs font-bold uppercase">
-          <TabBtn active={mode === "signin"} onClick={() => setMode("signin")}>Sign in</TabBtn>
-          <TabBtn active={mode === "signup"} onClick={() => setMode("signup")}>Sign up</TabBtn>
-          <TabBtn active={mode === "phone"} onClick={() => setMode("phone")}>Phone</TabBtn>
+          <TabBtn active={mode === "signin"} onClick={() => navigate({ to: "/auth", search: { mode: "signin" } })}>Sign in</TabBtn>
+          <TabBtn active={mode === "signup"} onClick={() => navigate({ to: "/auth", search: { mode: "signup" } })}>Sign up</TabBtn>
+          <TabBtn active={mode === "phone"} onClick={() => navigate({ to: "/auth", search: { mode: "phone" } })}>Phone</TabBtn>
         </div>
 
         {mode !== "phone" ? (

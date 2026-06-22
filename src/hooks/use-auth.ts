@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
 
-type AppRole = "admin" | "customer";
+type AppRole = "admin" | "customer" | "fleet_manager";
 
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
@@ -44,6 +44,8 @@ export function useAuth() {
     roles,
     loading,
     isAdmin: roles.includes("admin"),
+    isFleetManager: roles.includes("fleet_manager"),
+    isStaff: roles.includes("admin") || roles.includes("fleet_manager"),
     isAuthenticated: !!user,
   };
 }

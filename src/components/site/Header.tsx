@@ -15,7 +15,7 @@ const NAV = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated, isStaff } = useAuth();
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-8">
@@ -39,10 +39,10 @@ export function Header() {
           <ContactBadge icon={<Phone className="h-4 w-4" />} label="+1 202 102 2525" />
           <ContactBadge icon={<Mail className="h-4 w-4" />} label="hello@gocar.app" />
           <Link
-            to={isAuthenticated ? (isAdmin ? "/admin" : "/account") : "/auth"}
+            to={isAuthenticated ? (isStaff ? "/admin" : "/account") : "/auth"}
             className="rounded-md bg-foreground px-4 py-2 text-sm font-bold text-background transition hover:bg-primary"
           >
-            {isAuthenticated ? (isAdmin ? "Admin" : "Account") : "Sign in"}
+            {isAuthenticated ? (isStaff ? "Garage" : "Account") : "Sign in"}
           </Link>
         </div>
         <button
@@ -68,11 +68,11 @@ export function Header() {
               </Link>
             ))}
             <Link
-              to={isAuthenticated ? (isAdmin ? "/admin" : "/account") : "/auth"}
+              to={isAuthenticated ? (isStaff ? "/admin" : "/account") : "/auth"}
               className="mt-2 rounded-md bg-foreground px-3 py-2 text-center text-sm font-bold text-background"
               onClick={() => setOpen(false)}
             >
-              {isAuthenticated ? (isAdmin ? "Admin" : "Account") : "Sign in"}
+              {isAuthenticated ? (isStaff ? "Garage" : "Account") : "Sign in"}
             </Link>
           </nav>
         </div>

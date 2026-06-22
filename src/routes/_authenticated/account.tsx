@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/account")({
 });
 
 function AccountPage() {
-  const { user, isAdmin } = useAuth();
+  const { user, isStaff } = useAuth();
   const navigate = useNavigate();
 
   const { data: bookings } = useQuery({
@@ -39,7 +39,7 @@ function AccountPage() {
           <h1 className="mt-2 font-display text-4xl">Hi {user?.email}</h1>
         </div>
         <div className="flex gap-2">
-          {isAdmin && <Link to="/admin" className="rounded-md bg-foreground px-4 py-2 text-sm font-bold text-background">Admin</Link>}
+          {isStaff && <Link to="/admin" className="rounded-md bg-foreground px-4 py-2 text-sm font-bold text-background">Garage</Link>}
           <button onClick={signOut} className="rounded-md border border-border px-4 py-2 text-sm font-semibold">Sign out</button>
         </div>
       </div>

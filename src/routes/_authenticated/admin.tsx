@@ -14,10 +14,10 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 function AdminLayout() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <h1 className="font-display text-3xl">Garage</h1>
-        <nav className="flex gap-2 text-sm font-semibold">
+        <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 text-sm font-semibold [&::-webkit-scrollbar]:hidden">
           <Link to="/admin" className="rounded-md px-3 py-1.5 hover:bg-muted" activeProps={{ className: "bg-foreground text-background" }} activeOptions={{ exact: true }}>Dashboard</Link>
           <Link to="/admin/vehicles" className="rounded-md px-3 py-1.5 hover:bg-muted" activeProps={{ className: "bg-foreground text-background" }}>Vehicles</Link>
           <Link to="/admin/bookings" className="rounded-md px-3 py-1.5 hover:bg-muted" activeProps={{ className: "bg-foreground text-background" }}>Bookings</Link>

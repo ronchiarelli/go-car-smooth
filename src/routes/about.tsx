@@ -10,9 +10,9 @@ export const Route = createFileRoute("/about")({
     ],
   }),
   component: () => (
-    <section className="mx-auto max-w-3xl px-4 py-16 md:px-8">
+    <section className="mx-auto max-w-3xl px-4 py-10 md:px-8 md:py-16">
       <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">— About —</p>
-      <h1 className="mt-2 font-display text-5xl">Built for drivers who hate hassle.</h1>
+      <h1 className="mt-2 font-display text-4xl sm:text-5xl">Built for drivers who hate hassle.</h1>
       <p className="mt-6 text-foreground/70">
         GoCar started with a simple idea: renting or buying a car should feel as good as
         driving one. We curate every vehicle in our fleet, keep prices transparent and

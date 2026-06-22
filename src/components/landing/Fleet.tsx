@@ -12,13 +12,13 @@ const FLEET = [
 
 export function Fleet() {
   return (
-    <section className="bg-background py-16">
+    <section className="bg-background py-10 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">— Choose your car —</p>
-          <h2 className="mt-3 font-display text-4xl md:text-5xl">Our Vehicle Fleet</h2>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl md:text-5xl">Our Vehicle Fleet</h2>
         </div>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-8 grid gap-5 sm:gap-6 sm:grid-cols-2 md:grid-cols-3">
           {FLEET.map((c) => (
             <article key={c.id} className="overflow-hidden rounded-3xl bg-muted shadow-sm">
               <div className="relative">

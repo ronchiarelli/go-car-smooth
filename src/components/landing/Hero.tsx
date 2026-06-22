@@ -15,17 +15,17 @@ export function Hero() {
   const [tab, setTab] = useState<string>("car");
   return (
     <section className="relative overflow-hidden bg-secondary text-secondary-foreground">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:px-8 lg:grid-cols-2 lg:gap-4 lg:py-16">
-        <div className="relative z-10 space-y-6">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:py-12 md:px-8 lg:grid-cols-2 lg:gap-4 lg:py-16">
+        <div className="relative z-10 min-w-0 space-y-6">
           <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em] text-primary">
             <span className="h-px w-8 bg-primary" /> Premium
           </div>
-          <h1 className="font-display text-6xl leading-[0.95] tracking-wide sm:text-7xl md:text-8xl">
+          <h1 className="font-display text-4xl leading-[0.95] tracking-wide sm:text-6xl md:text-7xl lg:text-8xl">
             <span className="text-white">Rent</span>{" "}
             <span className="text-white/40">or</span>{" "}
             <span className="text-primary">Buy</span>
           </h1>
-          <p className="max-w-md text-white/70">
+          <p className="max-w-md text-sm text-white/70 sm:text-base">
             Premium cars from a hand-picked fleet. Pick up at the door, drop off
             anywhere, drive away with confidence.
           </p>
@@ -34,7 +34,7 @@ export function Hero() {
             <div className="px-5 pt-5">
               <p className="text-sm font-bold">Available For Rent</p>
             </div>
-            <div className="mt-3 flex overflow-x-auto px-3">
+            <div className="mt-3 flex overflow-x-auto px-3 [&::-webkit-scrollbar]:hidden">
               {TABS.map((t) => {
                 const Icon = t.icon;
                 const active = tab === t.id;
@@ -42,7 +42,8 @@ export function Hero() {
                   <button
                     key={t.id}
                     onClick={() => setTab(t.id)}
-                    className={`relative flex min-w-20 flex-1 flex-col items-center gap-1 rounded-t-xl px-3 py-3 text-xs font-bold uppercase transition ${
+                    type="button"
+                    className={`relative flex min-w-20 shrink-0 flex-1 flex-col items-center gap-1 rounded-t-xl px-3 py-3 text-xs font-bold uppercase transition ${
                       active ? "bg-primary text-primary-foreground" : "text-foreground/70 hover:bg-muted"
                     }`}
                   >
@@ -92,13 +93,13 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative">
-          <div className="pointer-events-none absolute right-0 top-10 select-none font-display text-[12rem] leading-none tracking-wider text-primary/30 sm:text-[16rem]">
+        <div className="relative min-w-0">
+          <div className="pointer-events-none absolute right-0 top-4 select-none font-display text-[6rem] leading-none tracking-wider text-primary/30 sm:top-10 sm:text-[12rem] lg:text-[16rem]">
             GOCAR
           </div>
-          <div className="absolute right-4 top-32 z-10 rounded-xl bg-black/80 px-5 py-3 text-right text-white shadow-xl">
-            <p className="text-xs uppercase tracking-widest text-white/60">Premium</p>
-            <p className="font-display text-3xl text-primary">$800<span className="text-sm text-white">/day</span></p>
+          <div className="absolute right-2 top-2 z-10 rounded-xl bg-black/80 px-3 py-2 text-right text-white shadow-xl sm:right-4 sm:top-32 sm:px-5 sm:py-3">
+            <p className="text-[10px] uppercase tracking-widest text-white/60 sm:text-xs">Premium</p>
+            <p className="font-display text-xl text-primary sm:text-3xl">$800<span className="text-xs text-white sm:text-sm">/day</span></p>
           </div>
           <img
             src={heroCar}

@@ -33,11 +33,11 @@ function CarsPage() {
   });
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 md:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-12">
       <div className="text-center">
         <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">— Available Fleet —</p>
-        <h1 className="mt-2 font-display text-5xl">Cars for Rent</h1>
-        <p className="mx-auto mt-3 max-w-xl text-foreground/70">
+        <h1 className="mt-2 font-display text-4xl sm:text-5xl">Cars for Rent</h1>
+        <p className="mx-auto mt-3 max-w-xl text-sm text-foreground/70 sm:text-base">
           Pick a ride, choose your dates, and we'll handle the rest. Free pickup in major cities.
         </p>
       </div>
@@ -49,7 +49,7 @@ function CarsPage() {
           No vehicles in the rental fleet yet. An admin can add inventory from the admin dashboard.
         </p>
       ) : (
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((v) => (
             <Link
               key={v.id}

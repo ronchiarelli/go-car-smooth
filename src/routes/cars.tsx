@@ -64,7 +64,7 @@ function CarsPage() {
                   <div className="grid h-full place-items-center text-foreground/40">No image</div>
                 )}
                 <div className="absolute bottom-0 right-0 bg-background px-4 py-2">
-                  <span className="font-display text-2xl text-primary">${Number(v.daily_price ?? 0)}</span>
+                  <span className="font-display text-2xl text-primary">GH₵ {Number(v.daily_price ?? 0)}</span>
                   <span className="ml-1 text-[10px] font-bold uppercase tracking-widest text-foreground/60">/Day</span>
                 </div>
               </div>

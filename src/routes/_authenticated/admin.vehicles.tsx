@@ -136,8 +136,8 @@ function AdminVehicles() {
                 <p className="text-xs text-foreground/60">{v.brand} · {v.type} · {v.listing}</p>
               </div>
               <div className="text-right text-xs">
-                {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>${Number(v.daily_price).toLocaleString()}/day</p>}
-                {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>${Number(v.sale_price).toLocaleString()}</p>}
+                {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>GH₵ {Number(v.daily_price).toLocaleString()}/day</p>}
+                {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>GH₵ {Number(v.sale_price).toLocaleString()}</p>}
               </div>
               <button onClick={() => remove(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
             </div>

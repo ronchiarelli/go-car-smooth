@@ -1,10 +1,16 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 
+const authSearchSchema = z.object({
+  mode: z.enum(["signin", "signup", "phone"]).optional().default("signin"),
+});
+
 export const Route = createFileRoute("/auth")({
+  validateSearch: authSearchSchema,
   head: () => ({
     meta: [
       { title: "Sign in — GoCar" },
@@ -18,7 +24,8 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup" | "phone">("signin");
+  const search = useSearch({ from: "/auth" });
+  const [mode, setMode] = useState<"signin" | "signup" | "phone">(search.mode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -27,6 +34,10 @@ function AuthPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [resetting, setResetting] = useState(false);
+
+  useEffect(() => {
+    setMode(search.mode);
+  }, [search.mode]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -128,9 +139,9 @@ function AuthPage() {
         <p className="mt-1 text-sm text-foreground/70">Rent or buy your next ride with GoCar.</p>
 
         <div className="mt-6 flex gap-2 text-xs font-bold uppercase">
-          <TabBtn active={mode === "signin"} onClick={() => setMode("signin")}>Sign in</TabBtn>
-          <TabBtn active={mode === "signup"} onClick={() => setMode("signup")}>Sign up</TabBtn>
-          <TabBtn active={mode === "phone"} onClick={() => setMode("phone")}>Phone</TabBtn>
+          <TabBtn active={mode === "signin"} onClick={() => navigate({ to: "/auth", search: { mode: "signin" } })}>Sign in</TabBtn>
+          <TabBtn active={mode === "signup"} onClick={() => navigate({ to: "/auth", search: { mode: "signup" } })}>Sign up</TabBtn>
+          <TabBtn active={mode === "phone"} onClick={() => navigate({ to: "/auth", search: { mode: "phone" } })}>Phone</TabBtn>
         </div>
 
         {mode !== "phone" ? (

@@ -10,11 +10,11 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section className="bg-background py-16">
+    <section className="bg-background py-10 sm:py-16">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 md:px-8 lg:grid-cols-2">
         <div className="space-y-6">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-primary">— Our Features —</p>
-          <h2 className="font-display text-4xl md:text-5xl">Why Choose GoCar?</h2>
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl">Why Choose GoCar?</h2>
           <p className="max-w-md text-foreground/70">
             Discover a world of convenience, safety, and customization — paving the way
             for unforgettable adventures and seamless mobility.

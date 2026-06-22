@@ -16,7 +16,7 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden bg-secondary text-secondary-foreground">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:py-12 md:px-8 lg:grid-cols-2 lg:gap-4 lg:py-16">
-        <div className="relative z-10 space-y-6">
+        <div className="relative z-10 min-w-0 space-y-6">
           <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em] text-primary">
             <span className="h-px w-8 bg-primary" /> Premium
           </div>
@@ -93,7 +93,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative min-w-0">
           <div className="pointer-events-none absolute right-0 top-4 select-none font-display text-[6rem] leading-none tracking-wider text-primary/30 sm:top-10 sm:text-[12rem] lg:text-[16rem]">
             GOCAR
           </div>

@@ -35,9 +35,11 @@ export function Header() {
             ))}
           </nav>
         </div>
-        <div className="hidden items-center gap-4 xl:flex">
-          <ContactBadge icon={<Phone className="h-4 w-4" />} label="+1 202 102 2525" />
-          <ContactBadge icon={<Mail className="h-4 w-4" />} label="hello@gocar.app" />
+        <div className="hidden items-center gap-4 lg:flex">
+          <div className="hidden items-center gap-4 xl:flex">
+            <ContactBadge icon={<Phone className="h-4 w-4" />} label="+1 202 102 2525" />
+            <ContactBadge icon={<Mail className="h-4 w-4" />} label="hello@gocar.app" />
+          </div>
           {isAuthenticated ? (
             <Link
               to={isStaff ? "/admin" : "/account"}

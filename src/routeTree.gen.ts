@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SaleRouteImport } from './routes/sale'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CarsRouteImport } from './routes/cars'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -34,6 +35,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const SaleRoute = SaleRouteImport.update({
   id: '/sale',
   path: '/sale',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/cars': typeof CarsRouteWithChildren
   '/contact': typeof ContactRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/cars': typeof CarsRouteWithChildren
   '/contact': typeof ContactRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/cars': typeof CarsRouteWithChildren
   '/contact': typeof ContactRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cars'
     | '/contact'
+    | '/reset-password'
     | '/sale'
     | '/services'
     | '/account'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cars'
     | '/contact'
+    | '/reset-password'
     | '/sale'
     | '/services'
     | '/account'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/cars'
     | '/contact'
+    | '/reset-password'
     | '/sale'
     | '/services'
     | '/_authenticated/account'
@@ -221,6 +233,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CarsRoute: typeof CarsRouteWithChildren
   ContactRoute: typeof ContactRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SaleRoute: typeof SaleRoute
   ServicesRoute: typeof ServicesRoute
 }
@@ -239,6 +252,13 @@ declare module '@tanstack/react-router' {
       path: '/sale'
       fullPath: '/sale'
       preLoaderRoute: typeof SaleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -391,6 +411,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CarsRoute: CarsRouteWithChildren,
   ContactRoute: ContactRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SaleRoute: SaleRoute,
   ServicesRoute: ServicesRoute,
 }

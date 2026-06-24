@@ -19,6 +19,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CarsIdRouteImport } from './routes/cars.$id'
+import { Route as AuthenticatedKycRouteImport } from './routes/_authenticated/kyc'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -76,6 +77,11 @@ const CarsIdRoute = CarsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => CarsRoute,
 } as any)
+const AuthenticatedKycRoute = AuthenticatedKycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/kyc': typeof AuthenticatedKycRoute
   '/cars/$id': typeof CarsIdRoute
   '/admin/bookings': typeof AuthenticatedAdminBookingsRoute
   '/admin/sales': typeof AuthenticatedAdminSalesRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/sale': typeof SaleRoute
   '/services': typeof ServicesRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/kyc': typeof AuthenticatedKycRoute
   '/cars/$id': typeof CarsIdRoute
   '/admin/bookings': typeof AuthenticatedAdminBookingsRoute
   '/admin/sales': typeof AuthenticatedAdminSalesRoute
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/kyc': typeof AuthenticatedKycRoute
   '/cars/$id': typeof CarsIdRoute
   '/_authenticated/admin/bookings': typeof AuthenticatedAdminBookingsRoute
   '/_authenticated/admin/sales': typeof AuthenticatedAdminSalesRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/account'
     | '/admin'
+    | '/kyc'
     | '/cars/$id'
     | '/admin/bookings'
     | '/admin/sales'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/sale'
     | '/services'
     | '/account'
+    | '/kyc'
     | '/cars/$id'
     | '/admin/bookings'
     | '/admin/sales'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/_authenticated/account'
     | '/_authenticated/admin'
+    | '/_authenticated/kyc'
     | '/cars/$id'
     | '/_authenticated/admin/bookings'
     | '/_authenticated/admin/sales'
@@ -310,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CarsIdRouteImport
       parentRoute: typeof CarsRoute
     }
+    '/_authenticated/kyc': {
+      id: '/_authenticated/kyc'
+      path: '/kyc'
+      fullPath: '/kyc'
+      preLoaderRoute: typeof AuthenticatedKycRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -384,11 +403,13 @@ const AuthenticatedAdminRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedKycRoute: typeof AuthenticatedKycRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedKycRoute: AuthenticatedKycRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

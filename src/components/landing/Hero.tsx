@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Car, Bus, Truck as TruckIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import heroCar from "@/assets/hero-car.jpg";
 
 const TABS = [
   { id: "car", label: "Car", icon: Car },
@@ -111,13 +110,6 @@ export function Hero() {
             <p className="text-[10px] uppercase tracking-widest text-white/60 sm:text-xs">Premium</p>
             <p className="font-display text-xl text-primary sm:text-3xl">GH₵ 800<span className="text-xs text-white sm:text-sm">/day</span></p>
           </div>
-          <img
-            src={heroCar}
-            alt="Featured rental car"
-            width={1600}
-            height={1024}
-            className="relative z-10 mx-auto w-full max-w-[640px] object-contain animate-hero-car-drive"
-          />
           <Link
             to="/cars"
             className="absolute bottom-4 left-4 z-20 rounded-md bg-primary px-5 py-2 text-sm font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary/90"

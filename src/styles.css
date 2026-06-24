@@ -179,11 +179,3 @@
   will-change: transform, opacity;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-hero-car-drive {
-    animation: none;
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-

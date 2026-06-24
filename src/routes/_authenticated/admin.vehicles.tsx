@@ -3,7 +3,18 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, EyeOff } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 
 export const Route = createFileRoute("/_authenticated/admin/vehicles")({
   component: AdminVehicles,
@@ -38,6 +49,13 @@ function AdminVehicles() {
   const [busy, setBusy] = useState(false);
   const [gallery, setGallery] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    id: string | null;
+    mode: "delete" | "deactivate" | null;
+  }>({ open: false, id: null, mode: null });
+
+
 
   async function uploadOne(file: File): Promise<string | null> {
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}-${file.name.replace(/\s+/g, "-")}`;
@@ -115,32 +133,52 @@ function AdminVehicles() {
     }
   }
 
-  async function remove(id: string) {
-    if (!confirm("Delete this vehicle?")) return;
-    // Clean up gallery rows first (CASCADE covers this, but keeps things tidy if FK changes).
-    await supabase.from("vehicle_images").delete().eq("vehicle_id", id);
-    const { error } = await supabase.from("vehicles").delete().eq("id", id);
-    if (!error) {
-      toast.success("Vehicle deleted");
-      qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
-      qc.invalidateQueries({ queryKey: ["vehicles"] });
-      return;
-    }
-    // FK violation — vehicle has bookings or purchase requests.
-    if ((error as any).code === "23503") {
-      if (confirm("This vehicle has bookings or purchase requests and can't be deleted. Deactivate it instead (hides it from customers)?")) {
-        const { error: dErr } = await supabase.from("vehicles").update({ is_active: false }).eq("id", id);
-        if (dErr) toast.error(dErr.message);
-        else {
-          toast.success("Vehicle deactivated");
-          qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
-          qc.invalidateQueries({ queryKey: ["vehicles"] });
-        }
-      }
-      return;
-    }
-    toast.error(error.message);
+  function promptDelete(id: string) {
+    setConfirmDialog({ open: true, id, mode: "delete" });
   }
+
+  function promptDeactivate(id: string) {
+    setConfirmDialog({ open: true, id, mode: "deactivate" });
+  }
+
+  function closeConfirm() {
+    setConfirmDialog({ open: false, id: null, mode: null });
+  }
+
+  async function executeConfirm() {
+    const { id, mode } = confirmDialog;
+    if (!id) return;
+    if (mode === "delete") {
+      // Clean up gallery rows first (CASCADE covers this, but keeps things tidy if FK changes).
+      await supabase.from("vehicle_images").delete().eq("vehicle_id", id);
+      const { error } = await supabase.from("vehicles").delete().eq("id", id);
+      if (!error) {
+        toast.success("Vehicle deleted");
+        qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
+        qc.invalidateQueries({ queryKey: ["vehicles"] });
+        closeConfirm();
+        return;
+      }
+      // FK violation — vehicle has bookings or purchase requests.
+      if ((error as any).code === "23503") {
+        toast.error("This vehicle is tied to bookings or purchase requests, so it can't be deleted.");
+        setConfirmDialog({ open: true, id, mode: "deactivate" });
+        return;
+      }
+      toast.error(error.message);
+    }
+    if (mode === "deactivate") {
+      const { error: dErr } = await supabase.from("vehicles").update({ is_active: false }).eq("id", id);
+      if (dErr) toast.error(dErr.message);
+      else {
+        toast.success("Vehicle deactivated");
+        qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
+        qc.invalidateQueries({ queryKey: ["vehicles"] });
+      }
+      closeConfirm();
+    }
+  }
+
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
@@ -159,7 +197,7 @@ function AdminVehicles() {
                 {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>GH₵ {Number(v.daily_price).toLocaleString()}/day</p>}
                 {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>GH₵ {Number(v.sale_price).toLocaleString()}</p>}
               </div>
-              <button onClick={() => remove(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
+              <button onClick={() => promptDelete(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
             </div>
           ))}
         </div>
@@ -232,6 +270,49 @@ function AdminVehicles() {
         </button>
         <style>{`.input{width:100%;border:1px solid var(--color-border);background:var(--color-background);border-radius:.5rem;padding:.5rem .75rem;font-size:.875rem}`}</style>
       </form>
+
+      <AlertDialog open={confirmDialog.open} onOpenChange={(open) => { if (!open) closeConfirm(); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              {confirmDialog.mode === "deactivate" ? (
+                <><EyeOff className="h-5 w-5 text-amber-500" /> Deactivate vehicle</>
+              ) : (
+                <><Trash2 className="h-5 w-5 text-destructive" /> Delete vehicle</>
+              )}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              {confirmDialog.mode === "deactivate" ? (
+                <>
+                  <p>Deactivating hides this vehicle from customers, but it <strong>stays in your records</strong> because it is linked to existing bookings or purchase requests.</p>
+                  <ul className="list-disc space-y-1 pl-4 text-foreground/80">
+                    <li>Customers will no longer see it in the vehicle list.</li>
+                    <li>Existing bookings and purchase requests remain intact.</li>
+                    <li>You can reactivate it later by editing the vehicle.</li>
+                  </ul>
+                </>
+              ) : (
+                <>
+                  <p>Are you sure you want to delete this vehicle? This action is permanent.</p>
+                  <ul className="list-disc space-y-1 pl-4 text-foreground/80">
+                    <li>All vehicle images will be removed.</li>
+                    <li>If the vehicle has bookings or purchase requests, it cannot be deleted — you will be offered deactivation instead.</li>
+                  </ul>
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={closeConfirm}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={executeConfirm}
+              className={confirmDialog.mode === "deactivate" ? "bg-amber-500 text-amber-950 hover:bg-amber-500/90" : ""}
+            >
+              {confirmDialog.mode === "deactivate" ? "Deactivate vehicle" : "Delete vehicle"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

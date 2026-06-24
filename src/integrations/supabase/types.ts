@@ -67,6 +67,63 @@ export type Database = {
           },
         ]
       }
+      kyc_documents: {
+        Row: {
+          back_url: string | null
+          created_at: string
+          date_of_birth: string | null
+          doc_number: string
+          doc_type: Database["public"]["Enums"]["kyc_doc_type"]
+          expiry_date: string | null
+          front_url: string
+          full_name: string | null
+          id: string
+          review_notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          selfie_url: string | null
+          status: Database["public"]["Enums"]["kyc_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          back_url?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          doc_number: string
+          doc_type: Database["public"]["Enums"]["kyc_doc_type"]
+          expiry_date?: string | null
+          front_url: string
+          full_name?: string | null
+          id?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_url?: string | null
+          status?: Database["public"]["Enums"]["kyc_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          back_url?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          doc_number?: string
+          doc_type?: Database["public"]["Enums"]["kyc_doc_type"]
+          expiry_date?: string | null
+          front_url?: string
+          full_name?: string | null
+          id?: string
+          review_notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selfie_url?: string | null
+          status?: Database["public"]["Enums"]["kyc_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -268,6 +325,8 @@ export type Database = {
       app_role: "admin" | "customer" | "fleet_manager"
       booking_status: "pending" | "confirmed" | "cancelled" | "completed"
       fuel_type: "petrol" | "diesel" | "electric" | "hybrid"
+      kyc_doc_type: "passport" | "drivers_license" | "ghana_card"
+      kyc_status: "pending" | "approved" | "rejected"
       purchase_status: "pending" | "contacted" | "closed" | "cancelled"
       vehicle_listing: "rent" | "sale" | "both"
       vehicle_type:
@@ -408,6 +467,8 @@ export const Constants = {
       app_role: ["admin", "customer", "fleet_manager"],
       booking_status: ["pending", "confirmed", "cancelled", "completed"],
       fuel_type: ["petrol", "diesel", "electric", "hybrid"],
+      kyc_doc_type: ["passport", "drivers_license", "ghana_card"],
+      kyc_status: ["pending", "approved", "rejected"],
       purchase_status: ["pending", "contacted", "closed", "cancelled"],
       vehicle_listing: ["rent", "sale", "both"],
       vehicle_type: ["car", "van", "minibus", "coupe", "bike", "suv", "truck"],

@@ -197,7 +197,7 @@ function AdminVehicles() {
                 {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>GH₵ {Number(v.daily_price).toLocaleString()}/day</p>}
                 {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>GH₵ {Number(v.sale_price).toLocaleString()}</p>}
               </div>
-              <button onClick={() => remove(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
+              <button onClick={() => promptDelete(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
             </div>
           ))}
         </div>

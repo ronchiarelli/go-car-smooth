@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Trash2, Plus, AlertTriangle, EyeOff } from "lucide-react";
+import { Trash2, Plus, EyeOff } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,

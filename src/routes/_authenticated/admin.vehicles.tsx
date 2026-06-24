@@ -49,6 +49,12 @@ function AdminVehicles() {
   const [busy, setBusy] = useState(false);
   const [gallery, setGallery] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [confirm, setConfirm] = useState<{
+    open: boolean;
+    id: string | null;
+    mode: "delete" | "deactivate" | null;
+  }>({ open: false, id: null, mode: null });
+
 
   async function uploadOne(file: File): Promise<string | null> {
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}-${file.name.replace(/\s+/g, "-")}`;

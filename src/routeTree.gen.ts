@@ -26,6 +26,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminVehiclesRouteImport } from './routes/_authenticated/admin.vehicles'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminSalesRouteImport } from './routes/_authenticated/admin.sales'
+import { Route as AuthenticatedAdminKycRouteImport } from './routes/_authenticated/admin.kyc'
 import { Route as AuthenticatedAdminBookingsRouteImport } from './routes/_authenticated/admin.bookings'
 
 const ServicesRoute = ServicesRouteImport.update({
@@ -113,6 +114,11 @@ const AuthenticatedAdminSalesRoute = AuthenticatedAdminSalesRouteImport.update({
   path: '/sales',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminKycRoute = AuthenticatedAdminKycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminBookingsRoute =
   AuthenticatedAdminBookingsRouteImport.update({
     id: '/bookings',
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/kyc': typeof AuthenticatedKycRoute
   '/cars/$id': typeof CarsIdRoute
   '/admin/bookings': typeof AuthenticatedAdminBookingsRoute
+  '/admin/kyc': typeof AuthenticatedAdminKycRoute
   '/admin/sales': typeof AuthenticatedAdminSalesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/vehicles': typeof AuthenticatedAdminVehiclesRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/kyc': typeof AuthenticatedKycRoute
   '/cars/$id': typeof CarsIdRoute
   '/admin/bookings': typeof AuthenticatedAdminBookingsRoute
+  '/admin/kyc': typeof AuthenticatedAdminKycRoute
   '/admin/sales': typeof AuthenticatedAdminSalesRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/vehicles': typeof AuthenticatedAdminVehiclesRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/_authenticated/kyc': typeof AuthenticatedKycRoute
   '/cars/$id': typeof CarsIdRoute
   '/_authenticated/admin/bookings': typeof AuthenticatedAdminBookingsRoute
+  '/_authenticated/admin/kyc': typeof AuthenticatedAdminKycRoute
   '/_authenticated/admin/sales': typeof AuthenticatedAdminSalesRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/vehicles': typeof AuthenticatedAdminVehiclesRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/cars/$id'
     | '/admin/bookings'
+    | '/admin/kyc'
     | '/admin/sales'
     | '/admin/users'
     | '/admin/vehicles'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/kyc'
     | '/cars/$id'
     | '/admin/bookings'
+    | '/admin/kyc'
     | '/admin/sales'
     | '/admin/users'
     | '/admin/vehicles'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/_authenticated/kyc'
     | '/cars/$id'
     | '/_authenticated/admin/bookings'
+    | '/_authenticated/admin/kyc'
     | '/_authenticated/admin/sales'
     | '/_authenticated/admin/users'
     | '/_authenticated/admin/vehicles'
@@ -371,6 +383,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSalesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/kyc': {
+      id: '/_authenticated/admin/kyc'
+      path: '/kyc'
+      fullPath: '/admin/kyc'
+      preLoaderRoute: typeof AuthenticatedAdminKycRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/bookings': {
       id: '/_authenticated/admin/bookings'
       path: '/bookings'
@@ -383,6 +402,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminBookingsRoute: typeof AuthenticatedAdminBookingsRoute
+  AuthenticatedAdminKycRoute: typeof AuthenticatedAdminKycRoute
   AuthenticatedAdminSalesRoute: typeof AuthenticatedAdminSalesRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminVehiclesRoute: typeof AuthenticatedAdminVehiclesRoute
@@ -391,6 +411,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminBookingsRoute: AuthenticatedAdminBookingsRoute,
+  AuthenticatedAdminKycRoute: AuthenticatedAdminKycRoute,
   AuthenticatedAdminSalesRoute: AuthenticatedAdminSalesRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminVehiclesRoute: AuthenticatedAdminVehiclesRoute,

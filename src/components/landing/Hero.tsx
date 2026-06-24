@@ -116,7 +116,7 @@ export function Hero() {
             alt="Featured rental car"
             width={1600}
             height={1024}
-            className="relative z-10 mx-auto w-full max-w-[640px] object-contain"
+            className="relative z-10 mx-auto w-full max-w-[640px] object-contain animate-hero-car-drive"
           />
           <Link
             to="/cars"

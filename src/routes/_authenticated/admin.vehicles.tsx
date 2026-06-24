@@ -49,11 +49,12 @@ function AdminVehicles() {
   const [busy, setBusy] = useState(false);
   const [gallery, setGallery] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [confirm, setConfirm] = useState<{
+  const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
     id: string | null;
     mode: "delete" | "deactivate" | null;
   }>({ open: false, id: null, mode: null });
+
 
 
   async function uploadOne(file: File): Promise<string | null> {

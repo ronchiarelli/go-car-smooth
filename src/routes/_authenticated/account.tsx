@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
-import { CalendarCheck, Wallet, CarFront, ShoppingBag } from "lucide-react";
+import { CalendarCheck, Wallet, CarFront, ShoppingBag, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/account")({
   component: AccountPage,
@@ -39,6 +39,20 @@ function AccountPage() {
     },
   });
 
+  const { data: kyc } = useQuery({
+    queryKey: ["my-kyc-latest", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("kyc_documents")
+        .select("status")
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (error) throw error;
+      return data?.[0] ?? null;
+    },
+  });
+
   const now = new Date();
   const upcoming = (bookings ?? []).filter((b: any) => new Date(b.pickup_at) >= now && b.status !== "cancelled");
   const active = (bookings ?? []).find((b: any) => b.status === "confirmed" && new Date(b.pickup_at) <= now && new Date(b.return_at) >= now);
@@ -65,6 +79,27 @@ function AccountPage() {
           <button onClick={signOut} className="rounded-md border border-border px-4 py-2 text-sm font-semibold">Sign out</button>
         </div>
       </div>
+
+      {/* KYC banner */}
+      <Link to="/kyc" className={`mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-5 transition ${
+        kyc?.status === "approved" ? "bg-primary/10 text-primary" :
+        kyc?.status === "rejected" ? "bg-destructive/10 text-destructive" :
+        kyc?.status === "pending" ? "bg-muted" : "bg-foreground text-background"
+      }`}>
+        <div className="flex items-center gap-3">
+          <ShieldCheck className="h-6 w-6" />
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest opacity-80">Identity verification</p>
+            <p className="font-display text-lg">
+              {kyc?.status === "approved" ? "Verified" :
+               kyc?.status === "rejected" ? "Rejected — please re-submit" :
+               kyc?.status === "pending" ? "Under review" :
+               "Verify your ID to rent or sell"}
+            </p>
+          </div>
+        </div>
+        <span className="text-sm font-semibold underline">Manage KYC →</span>
+      </Link>
 
       {/* Stat cards */}
       <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">

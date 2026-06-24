@@ -29,6 +29,7 @@ function AdminLayout() {
           <NavTab to="/admin/vehicles">Vehicles</NavTab>
           <NavTab to="/admin/bookings">Bookings</NavTab>
           {isAdmin && <NavTab to="/admin/sales">Sales</NavTab>}
+          {isAdmin && <NavTab to="/admin/kyc">KYC</NavTab>}
           {isAdmin && <NavTab to="/admin/users">Users</NavTab>}
         </nav>
       </div>

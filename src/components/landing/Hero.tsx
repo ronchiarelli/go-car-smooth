@@ -11,6 +11,8 @@ const TABS = [
   { id: "truck", label: "Truck", icon: TruckIcon },
 ] as const;
 
+const GH_CITIES = ["Accra", "Kumasi", "Takoradi", "Tamale", "Cape Coast", "Tema", "Ho", "Sunyani", "Koforidua"];
+
 export function Hero() {
   const [tab, setTab] = useState<string>("car");
   return (
@@ -26,13 +28,13 @@ export function Hero() {
             <span className="text-primary">Buy</span>
           </h1>
           <p className="max-w-md text-sm text-white/70 sm:text-base">
-            Premium cars from a hand-picked fleet. Pick up at the door, drop off
+            Self-drive rentals across Ghana. Pick up at the door, drop off
             anywhere, drive away with confidence.
           </p>
 
           <div className="mt-6 overflow-hidden rounded-2xl bg-background text-foreground shadow-2xl">
             <div className="px-5 pt-5">
-              <p className="text-sm font-bold">Available For Rent</p>
+              <p className="text-sm font-bold">Available For Self-Drive Rent</p>
             </div>
             <div className="mt-3 flex overflow-x-auto px-3 [&::-webkit-scrollbar]:hidden">
               {TABS.map((t) => {
@@ -61,19 +63,24 @@ export function Hero() {
               }}
             >
               <div className="grid gap-3 sm:grid-cols-3">
-                <Field label="Vehicle type">
+                <Field label="Class">
                   <select className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" defaultValue="">
-                    <option value="">Any model</option>
+                    <option value="">Any class</option>
                     <option>Economy</option>
                     <option>Premium</option>
                     <option>Luxury</option>
+                    <option>SUV</option>
                   </select>
                 </Field>
-                <Field label="Pick up location">
-                  <input className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" placeholder="Lagos, NG" />
+                <Field label="Pick up city">
+                  <select className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" defaultValue="Accra">
+                    {GH_CITIES.map((c) => <option key={c}>{c}</option>)}
+                  </select>
                 </Field>
-                <Field label="Drop off location">
-                  <input className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" placeholder="Abuja, NG" />
+                <Field label="Drop off city">
+                  <select className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" defaultValue="Accra">
+                    {GH_CITIES.map((c) => <option key={c}>{c}</option>)}
+                  </select>
                 </Field>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -84,6 +91,9 @@ export function Hero() {
                   <input type="date" className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
                 </Field>
               </div>
+              <p className="text-center text-[11px] uppercase tracking-widest text-foreground/50">
+                Self-drive · Valid driver's licence & KYC required
+              </p>
               <div className="flex justify-center pt-2">
                 <button className="rounded-md bg-foreground px-8 py-3 text-sm font-bold uppercase tracking-wider text-background transition hover:bg-primary">
                   Find a vehicle

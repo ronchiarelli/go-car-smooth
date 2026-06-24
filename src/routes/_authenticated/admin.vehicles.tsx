@@ -117,9 +117,29 @@ function AdminVehicles() {
 
   async function remove(id: string) {
     if (!confirm("Delete this vehicle?")) return;
+    // Clean up gallery rows first (CASCADE covers this, but keeps things tidy if FK changes).
+    await supabase.from("vehicle_images").delete().eq("vehicle_id", id);
     const { error } = await supabase.from("vehicles").delete().eq("id", id);
-    if (error) toast.error(error.message);
-    else { toast.success("Deleted"); qc.invalidateQueries({ queryKey: ["admin-vehicles"] }); }
+    if (!error) {
+      toast.success("Vehicle deleted");
+      qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
+      qc.invalidateQueries({ queryKey: ["vehicles"] });
+      return;
+    }
+    // FK violation — vehicle has bookings or purchase requests.
+    if ((error as any).code === "23503") {
+      if (confirm("This vehicle has bookings or purchase requests and can't be deleted. Deactivate it instead (hides it from customers)?")) {
+        const { error: dErr } = await supabase.from("vehicles").update({ is_active: false }).eq("id", id);
+        if (dErr) toast.error(dErr.message);
+        else {
+          toast.success("Vehicle deactivated");
+          qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
+          qc.invalidateQueries({ queryKey: ["vehicles"] });
+        }
+      }
+      return;
+    }
+    toast.error(error.message);
   }
 
   return (
@@ -175,14 +195,19 @@ function AdminVehicles() {
         </div>
         <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="input min-h-20" /></Field>
         <Field label="Images (first is primary)">
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => { if (e.target.files?.length) { uploadImages(e.target.files); e.target.value = ""; } }}
-            className="text-xs"
-          />
-          {uploading && <p className="mt-1 text-xs text-foreground/60">Uploading…</p>}
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-border bg-background/50 px-4 py-6 text-center text-xs text-foreground/70 transition hover:border-primary hover:text-foreground">
+            <Plus className="h-5 w-5" />
+            <span className="font-semibold">{uploading ? "Uploading…" : "Click to upload images"}</span>
+            <span className="text-[11px] text-foreground/50">PNG, JPG, WEBP · multiple allowed</span>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              disabled={uploading}
+              onChange={(e) => { if (e.target.files?.length) { uploadImages(e.target.files); e.target.value = ""; } }}
+              className="hidden"
+            />
+          </label>
           {(form.primary_image_url || gallery.length > 0) && (
             <div className="mt-2 grid grid-cols-3 gap-2">
               {[form.primary_image_url, ...gallery].filter(Boolean).map((url, i) => (

@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Trash2, Plus, EyeOff } from "lucide-react";
+import { Trash2, Plus, EyeOff, ImagePlus, Star } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,6 +14,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 
 export const Route = createFileRoute("/_authenticated/admin/vehicles")({
@@ -54,6 +61,11 @@ function AdminVehicles() {
     id: string | null;
     mode: "delete" | "deactivate" | null;
   }>({ open: false, id: null, mode: null });
+  const [editing, setEditing] = useState<{ id: string; name: string } | null>(null);
+  const [editPrimary, setEditPrimary] = useState<string>("");
+  const [editGallery, setEditGallery] = useState<{ id?: string; url: string }[]>([]);
+  const [editBusy, setEditBusy] = useState(false);
+  const [editUploading, setEditUploading] = useState(false);
 
 
 
@@ -63,6 +75,83 @@ function AdminVehicles() {
     if (error) { toast.error(error.message); return null; }
     const { data } = await supabase.storage.from("vehicle-images").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
     return data?.signedUrl ?? null;
+  }
+
+  async function openEditImages(v: { id: string; name: string; primary_image_url: string | null }) {
+    setEditing({ id: v.id, name: v.name });
+    setEditPrimary(v.primary_image_url ?? "");
+    const { data: imgs, error } = await supabase
+      .from("vehicle_images")
+      .select("id,url,sort")
+      .eq("vehicle_id", v.id)
+      .order("sort", { ascending: true });
+    if (error) { toast.error(error.message); setEditGallery([]); return; }
+    setEditGallery((imgs ?? []).map((r) => ({ id: r.id as string, url: r.url as string })));
+  }
+
+  function closeEdit() {
+    setEditing(null);
+    setEditPrimary("");
+    setEditGallery([]);
+  }
+
+  async function editUpload(files: FileList) {
+    setEditUploading(true);
+    try {
+      const urls: string[] = [];
+      for (const file of Array.from(files)) {
+        const u = await uploadOne(file);
+        if (u) urls.push(u);
+      }
+      if (!urls.length) return;
+      setEditGallery((g) => [...g, ...urls.map((url) => ({ url }))]);
+      if (!editPrimary) setEditPrimary(urls[0]);
+      toast.success(`Uploaded ${urls.length} image${urls.length === 1 ? "" : "s"}`);
+    } finally {
+      setEditUploading(false);
+    }
+  }
+
+  function makePrimary(url: string) {
+    setEditPrimary(url);
+  }
+
+  function removeEditImage(url: string) {
+    setEditGallery((g) => g.filter((r) => r.url !== url));
+    if (editPrimary === url) setEditPrimary("");
+  }
+
+  async function saveEditImages() {
+    if (!editing) return;
+    setEditBusy(true);
+    try {
+      // Update vehicle's primary image
+      const { error: vErr } = await supabase
+        .from("vehicles")
+        .update({ primary_image_url: editPrimary || null })
+        .eq("id", editing.id);
+      if (vErr) throw vErr;
+
+      // Replace gallery: delete existing rows, insert current set (excluding primary)
+      const { error: dErr } = await supabase.from("vehicle_images").delete().eq("vehicle_id", editing.id);
+      if (dErr) throw dErr;
+
+      const galleryUrls = editGallery.map((g) => g.url).filter((u) => u !== editPrimary);
+      if (galleryUrls.length) {
+        const rows = galleryUrls.map((url, i) => ({ vehicle_id: editing.id, url, sort: i + 1 }));
+        const { error: iErr } = await supabase.from("vehicle_images").insert(rows);
+        if (iErr) throw iErr;
+      }
+
+      toast.success("Images updated");
+      qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
+      qc.invalidateQueries({ queryKey: ["vehicles"] });
+      closeEdit();
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setEditBusy(false);
+    }
   }
 
   async function uploadImages(files: FileList) {
@@ -197,6 +286,14 @@ function AdminVehicles() {
                 {(v.listing === "rent" || v.listing === "both") && v.daily_price != null && <p>GH₵ {Number(v.daily_price).toLocaleString()}/day</p>}
                 {(v.listing === "sale" || v.listing === "both") && v.sale_price != null && <p>GH₵ {Number(v.sale_price).toLocaleString()}</p>}
               </div>
+              <button
+                onClick={() => openEditImages(v)}
+                className="text-foreground/70 hover:text-primary"
+                aria-label="Edit images"
+                title="Edit images"
+              >
+                <ImagePlus className="h-4 w-4" />
+              </button>
               <button onClick={() => promptDelete(v.id)} className="text-destructive hover:opacity-70"><Trash2 className="h-4 w-4" /></button>
             </div>
           ))}
@@ -313,6 +410,83 @@ function AdminVehicles() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={!!editing} onOpenChange={(open) => { if (!open) closeEdit(); }}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit images — {editing?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-border bg-background/50 px-4 py-6 text-center text-xs text-foreground/70 transition hover:border-primary hover:text-foreground">
+              <Plus className="h-5 w-5" />
+              <span className="font-semibold">{editUploading ? "Uploading…" : "Click to upload images"}</span>
+              <span className="text-[11px] text-foreground/50">PNG, JPG, WEBP · multiple allowed</span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                disabled={editUploading}
+                onChange={(e) => { if (e.target.files?.length) { editUpload(e.target.files); e.target.value = ""; } }}
+                className="hidden"
+              />
+            </label>
+
+            {editGallery.length === 0 && !editPrimary ? (
+              <p className="text-sm text-foreground/60">No images yet. Upload some above.</p>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {(editPrimary ? [{ url: editPrimary }, ...editGallery.filter((g) => g.url !== editPrimary)] : editGallery).map((img) => {
+                  const isPrimary = img.url === editPrimary;
+                  return (
+                    <div key={img.url} className="relative">
+                      <img src={img.url} alt="" className="h-24 w-full rounded-md object-cover" />
+                      {isPrimary && (
+                        <span className="absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">PRIMARY</span>
+                      )}
+                      {!isPrimary && (
+                        <button
+                          type="button"
+                          onClick={() => makePrimary(img.url)}
+                          className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background/90 text-foreground shadow"
+                          aria-label="Make primary"
+                          title="Make primary"
+                        >
+                          <Star className="h-3 w-3" />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeEditImage(img.url)}
+                        className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-destructive text-destructive-foreground"
+                        aria-label="Remove image"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <button
+              type="button"
+              onClick={closeEdit}
+              className="rounded-md border border-border px-4 py-2 text-sm"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              disabled={editBusy}
+              onClick={saveEditImages}
+              className="rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground disabled:opacity-50"
+            >
+              {editBusy ? "Saving…" : "Save changes"}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

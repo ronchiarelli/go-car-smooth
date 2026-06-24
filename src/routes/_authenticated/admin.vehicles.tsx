@@ -133,32 +133,52 @@ function AdminVehicles() {
     }
   }
 
-  async function remove(id: string) {
-    if (!confirm("Delete this vehicle?")) return;
-    // Clean up gallery rows first (CASCADE covers this, but keeps things tidy if FK changes).
-    await supabase.from("vehicle_images").delete().eq("vehicle_id", id);
-    const { error } = await supabase.from("vehicles").delete().eq("id", id);
-    if (!error) {
-      toast.success("Vehicle deleted");
-      qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
-      qc.invalidateQueries({ queryKey: ["vehicles"] });
-      return;
-    }
-    // FK violation — vehicle has bookings or purchase requests.
-    if ((error as any).code === "23503") {
-      if (confirm("This vehicle has bookings or purchase requests and can't be deleted. Deactivate it instead (hides it from customers)?")) {
-        const { error: dErr } = await supabase.from("vehicles").update({ is_active: false }).eq("id", id);
-        if (dErr) toast.error(dErr.message);
-        else {
-          toast.success("Vehicle deactivated");
-          qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
-          qc.invalidateQueries({ queryKey: ["vehicles"] });
-        }
-      }
-      return;
-    }
-    toast.error(error.message);
+  function promptDelete(id: string) {
+    setConfirmDialog({ open: true, id, mode: "delete" });
   }
+
+  function promptDeactivate(id: string) {
+    setConfirmDialog({ open: true, id, mode: "deactivate" });
+  }
+
+  function closeConfirm() {
+    setConfirmDialog({ open: false, id: null, mode: null });
+  }
+
+  async function executeConfirm() {
+    const { id, mode } = confirmDialog;
+    if (!id) return;
+    if (mode === "delete") {
+      // Clean up gallery rows first (CASCADE covers this, but keeps things tidy if FK changes).
+      await supabase.from("vehicle_images").delete().eq("vehicle_id", id);
+      const { error } = await supabase.from("vehicles").delete().eq("id", id);
+      if (!error) {
+        toast.success("Vehicle deleted");
+        qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
+        qc.invalidateQueries({ queryKey: ["vehicles"] });
+        closeConfirm();
+        return;
+      }
+      // FK violation — vehicle has bookings or purchase requests.
+      if ((error as any).code === "23503") {
+        toast.error("This vehicle is tied to bookings or purchase requests, so it can't be deleted.");
+        setConfirmDialog({ open: true, id, mode: "deactivate" });
+        return;
+      }
+      toast.error(error.message);
+    }
+    if (mode === "deactivate") {
+      const { error: dErr } = await supabase.from("vehicles").update({ is_active: false }).eq("id", id);
+      if (dErr) toast.error(dErr.message);
+      else {
+        toast.success("Vehicle deactivated");
+        qc.invalidateQueries({ queryKey: ["admin-vehicles"] });
+        qc.invalidateQueries({ queryKey: ["vehicles"] });
+      }
+      closeConfirm();
+    }
+  }
+
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_360px]">

@@ -410,6 +410,83 @@ function AdminVehicles() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={!!editing} onOpenChange={(open) => { if (!open) closeEdit(); }}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit images — {editing?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-border bg-background/50 px-4 py-6 text-center text-xs text-foreground/70 transition hover:border-primary hover:text-foreground">
+              <Plus className="h-5 w-5" />
+              <span className="font-semibold">{editUploading ? "Uploading…" : "Click to upload images"}</span>
+              <span className="text-[11px] text-foreground/50">PNG, JPG, WEBP · multiple allowed</span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                disabled={editUploading}
+                onChange={(e) => { if (e.target.files?.length) { editUpload(e.target.files); e.target.value = ""; } }}
+                className="hidden"
+              />
+            </label>
+
+            {editGallery.length === 0 && !editPrimary ? (
+              <p className="text-sm text-foreground/60">No images yet. Upload some above.</p>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {(editPrimary ? [{ url: editPrimary }, ...editGallery.filter((g) => g.url !== editPrimary)] : editGallery).map((img) => {
+                  const isPrimary = img.url === editPrimary;
+                  return (
+                    <div key={img.url} className="relative">
+                      <img src={img.url} alt="" className="h-24 w-full rounded-md object-cover" />
+                      {isPrimary && (
+                        <span className="absolute left-1 top-1 rounded bg-primary px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">PRIMARY</span>
+                      )}
+                      {!isPrimary && (
+                        <button
+                          type="button"
+                          onClick={() => makePrimary(img.url)}
+                          className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background/90 text-foreground shadow"
+                          aria-label="Make primary"
+                          title="Make primary"
+                        >
+                          <Star className="h-3 w-3" />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeEditImage(img.url)}
+                        className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-destructive text-destructive-foreground"
+                        aria-label="Remove image"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <button
+              type="button"
+              onClick={closeEdit}
+              className="rounded-md border border-border px-4 py-2 text-sm"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              disabled={editBusy}
+              onClick={saveEditImages}
+              className="rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground disabled:opacity-50"
+            >
+              {editBusy ? "Saving…" : "Save changes"}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

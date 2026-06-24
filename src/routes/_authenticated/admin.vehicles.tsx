@@ -270,6 +270,49 @@ function AdminVehicles() {
         </button>
         <style>{`.input{width:100%;border:1px solid var(--color-border);background:var(--color-background);border-radius:.5rem;padding:.5rem .75rem;font-size:.875rem}`}</style>
       </form>
+
+      <AlertDialog open={confirmDialog.open} onOpenChange={(open) => { if (!open) closeConfirm(); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              {confirmDialog.mode === "deactivate" ? (
+                <><EyeOff className="h-5 w-5 text-amber-500" /> Deactivate vehicle</>
+              ) : (
+                <><Trash2 className="h-5 w-5 text-destructive" /> Delete vehicle</>
+              )}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              {confirmDialog.mode === "deactivate" ? (
+                <>
+                  <p>Deactivating hides this vehicle from customers, but it <strong>stays in your records</strong> because it is linked to existing bookings or purchase requests.</p>
+                  <ul className="list-disc space-y-1 pl-4 text-foreground/80">
+                    <li>Customers will no longer see it in the vehicle list.</li>
+                    <li>Existing bookings and purchase requests remain intact.</li>
+                    <li>You can reactivate it later by editing the vehicle.</li>
+                  </ul>
+                </>
+              ) : (
+                <>
+                  <p>Are you sure you want to delete this vehicle? This action is permanent.</p>
+                  <ul className="list-disc space-y-1 pl-4 text-foreground/80">
+                    <li>All vehicle images will be removed.</li>
+                    <li>If the vehicle has bookings or purchase requests, it cannot be deleted — you will be offered deactivation instead.</li>
+                  </ul>
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={closeConfirm}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={executeConfirm}
+              className={confirmDialog.mode === "deactivate" ? "bg-amber-500 text-amber-950 hover:bg-amber-500/90" : ""}
+            >
+              {confirmDialog.mode === "deactivate" ? "Deactivate vehicle" : "Delete vehicle"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

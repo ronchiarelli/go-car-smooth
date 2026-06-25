@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Car, Bus, Truck as TruckIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import heroCar from "@/assets/hero-car.png";
+
 
 const TABS = [
   { id: "car", label: "Car", icon: Car },

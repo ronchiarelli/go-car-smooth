@@ -104,10 +104,17 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="relative min-w-0">
+        <div className="relative flex min-w-0 items-center justify-center">
           <div className="pointer-events-none absolute right-0 top-4 select-none font-display text-[6rem] leading-none tracking-wider text-primary/30 sm:top-10 sm:text-[12rem] lg:text-[16rem]">
             GOCAR
           </div>
+          <img
+            src={heroCar}
+            alt="Premium BMW convertible"
+            width={1280}
+            height={640}
+            className="relative z-10 w-full max-w-2xl object-contain drop-shadow-2xl"
+          />
           <div className="absolute right-2 top-2 z-10 rounded-xl bg-black/80 px-3 py-2 text-right text-white shadow-xl sm:right-4 sm:top-32 sm:px-5 sm:py-3">
             <p className="text-[10px] uppercase tracking-widest text-white/60 sm:text-xs">Premium</p>
             <p className="font-display text-xl text-primary sm:text-3xl">GH₵ 800<span className="text-xs text-white sm:text-sm">/day</span></p>
@@ -119,6 +126,7 @@ export function Hero() {
             Browse fleet
           </Link>
         </div>
+
       </div>
     </section>
   );
